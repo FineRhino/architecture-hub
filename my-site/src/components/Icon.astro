@@ -17,6 +17,7 @@ export type IconName =
 	| 'thumbs-up'
 	| 'thumbs-down'
 	| 'podcast'
+	| 'book'
 	| 'mark';
 
 interface Props {
@@ -157,6 +158,13 @@ const { name, size = 24, class: className = '' } = Astro.props;
 			<path d="M5 10a7 7 0 0 0 14 0" />
 			<line x1="12" y1="17" x2="12" y2="21" />
 			<line x1="8" y1="21" x2="16" y2="21" />
+		</>
+	)}
+	{name === 'book' && (
+		<>
+			<rect x="3" y="4" width="8" height="16" rx="1" />
+			<rect x="13" y="4" width="8" height="16" rx="1" />
+			<line x1="12" y1="4" x2="12" y2="20" />
 		</>
 	)}
 	{name === 'mark' && (

@@ -212,6 +212,99 @@ const sections: { id: string; title: string; description: string; articles: Arti
 	},
 ];
 
+type Book = {
+	title: string;
+	authors: string;
+	url: string;
+	why: string;
+};
+
+const books: Book[] = [
+	{
+		title: 'Fundamentals of Software Architecture, 2nd Edition',
+		authors: 'Mark Richards & Neal Ford',
+		url: 'https://www.oreilly.com/library/view/fundamentals-of-software/9781098175504/',
+		why: 'Best overall modern architecture book — newly updated to incorporate generative AI into architectural practice.',
+	},
+	{
+		title: 'AI Engineering',
+		authors: 'Chip Huyen',
+		url: 'https://www.oreilly.com/library/view/ai-engineering/9781098166298/',
+		why: 'Best bridge between traditional software architecture and foundation-model applications.',
+	},
+	{
+		title: 'Designing Data-Intensive Applications, 2nd Edition',
+		authors: 'Martin Kleppmann & Chris Riccomini',
+		url: 'https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/',
+		why: 'Essential for the data and platform architecture underneath AI.',
+	},
+	{
+		title: 'Generative AI Design Patterns',
+		authors: 'Valliappa Lakshmanan & Hannes Hapke',
+		url: 'https://www.oreilly.com/library/view/generative-ai-design/9798341622654/',
+		why: 'An excellent catalog of architectural patterns specifically for GenAI.',
+	},
+	{
+		title: 'Software Architecture: The Hard Parts',
+		authors: 'Neal Ford, Mark Richards, Pramod Sadalage & Zhamak Dehghani',
+		url: 'https://www.oreilly.com/library/view/software-architecture-the/9781492086888/',
+		why: 'Teaches architectural trade-off analysis rather than simplistic "best practices."',
+	},
+	{
+		title: 'Architecting Enterprise AI Applications',
+		authors: 'Packt',
+		url: 'https://www.oreilly.com/library/view/architecting-enterprise-ai/9798868809026/',
+		why: 'Focused explicitly on enterprise-scale AI application architecture.',
+	},
+	{
+		title: 'Architectures for the Intelligent AI-Ready Enterprise',
+		authors: 'Bialek, Rojas Arbulu & Hedgecock',
+		url: 'https://www.oreilly.com/library/view/architectures-for-the/9781806117154/',
+		why: 'Enterprise architecture specifically oriented around becoming AI-ready.',
+	},
+	{
+		title: 'Designing Machine Learning Systems',
+		authors: 'Chip Huyen',
+		url: 'https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/',
+		why: 'Production ML architecture: data, models, deployment, monitoring, and reliability.',
+	},
+	{
+		title: 'Building Evolutionary Architectures, 2nd Edition',
+		authors: 'Neal Ford, Rebecca Parsons, Patrick Kua & Pramod Sadalage',
+		url: 'https://www.oreilly.com/library/view/building-evolutionary-architectures/9781492097532/',
+		why: 'Increasingly important when technology and model capabilities change every few months.',
+	},
+	{
+		title: 'Architecting AI Software Systems',
+		authors: 'Richard D. Avila & Imran Ahmad',
+		url: 'https://www.oreilly.com/library/view/architecting-ai-software/9781804615973/',
+		why: 'Directly addresses integrating AI into conventional enterprise systems.',
+	},
+];
+
+const topFive = [
+	{
+		book: books[0],
+		note: 'Start here. Retains the core architectural thinking — characteristics, modularity, trade-offs — while explicitly incorporating generative AI into the practice.',
+	},
+	{
+		book: books[1],
+		note: 'What you\'re now architecting: foundation models, RAG, agents, evaluation, and inference, treated as systems-engineering problems rather than algorithms.',
+	},
+	{
+		book: books[3],
+		note: 'Patterns outlive specific SDKs. Covers RAG, semantic caching, model routing, tool use, and guardrails as reusable structures.',
+	},
+	{
+		book: books[2],
+		note: 'Models are commoditizing; the differentiator is the data architecture underneath them. This edition updates the classic for modern cloud and distributed systems.',
+	},
+	{
+		book: books[4],
+		note: 'Not an AI book — and that\'s the point. Sharpens the trade-off reasoning (microservices vs. modular monolith, RAG vs. fine-tuning) that AI makes more valuable, not less.',
+	},
+];
+
 const readingOrder = [
 	{ label: 'Architecture in the Age of AI — InfoQ', note: 'establish the big-picture EA perspective.', href: sections[0].articles[0].url },
 	{ label: 'From Microservices to AI Agents — IBM', note: 'understand the architectural paradigm shift.', href: sections[0].articles[2].url },
@@ -282,6 +375,43 @@ const newFlow = ['Business intent', 'Specification', 'Architecture constraints',
 								))}
 							</div>
 						))}
+
+						<div class="resource-section">
+							<h2 class="resource-section-title" style="display: flex; align-items: center; gap: 0.5rem;"><Icon name="book" size={22} /> Books</h2>
+							<p class="resource-section-desc">
+								For an enterprise architect working in the AI era, the reading list shouldn't be built
+								exclusively around "AI books." The biggest architectural shift is the combination of
+								foundation models, agents, data architecture, distributed systems, evolutionary
+								architecture, and governance — ranked roughly in priority order.
+							</p>
+							{books.map((book, i) => (
+								<a class="book-card" href={book.url} target="_blank" rel="noopener noreferrer">
+									<span class="book-rank">{i + 1}</span>
+									<div>
+										<div class="book-card-title">
+											{book.title}
+											<span class="external-link-icon"><Icon name="external-link" size={14} /></span>
+										</div>
+										<div class="book-author">{book.authors}</div>
+										<p class="book-why">{book.why}</p>
+									</div>
+								</a>
+							))}
+						</div>
+
+						<div class="resource-section">
+							<h2 class="resource-section-title">The Five to Buy First</h2>
+							<p class="resource-section-desc">
+								If you only read five of the ten, read them in this order:
+							</p>
+							<ol class="reading-order">
+								{topFive.map((item) => (
+									<li>
+										<a href={item.book.url} target="_blank" rel="noopener noreferrer">{item.book.title}</a> — {item.note}
+									</li>
+								))}
+							</ol>
+						</div>
 
 						<div class="resource-section">
 							<h2 class="resource-section-title">Recommended Reading Order</h2>
