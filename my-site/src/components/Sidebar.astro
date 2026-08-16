@@ -7,9 +7,10 @@ const items: { href: string; label: string; icon: IconName }[] = [
 	{ href: '/guides', label: 'Guides', icon: 'compass' },
 	{ href: '/blog', label: 'Articles', icon: 'document' },
 	{ href: '/resources', label: 'Resources', icon: 'bookmark' },
+	{ href: '/podcasts', label: 'Podcasts', icon: 'podcast' },
 ];
 
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+const pathname = Astro.url.pathname;
 const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 

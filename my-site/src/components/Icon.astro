@@ -16,6 +16,7 @@ export type IconName =
 	| 'bookmark'
 	| 'thumbs-up'
 	| 'thumbs-down'
+	| 'podcast'
 	| 'mark';
 
 interface Props {
@@ -148,6 +149,14 @@ const { name, size = 24, class: className = '' } = Astro.props;
 		<>
 			<rect x="3" y="3" width="4" height="10" rx="1" />
 			<polygon points="9,3 9,12 11,19 13,19 13,14 19,14 20,12 18,5 17,3" fill="currentColor" stroke="none" />
+		</>
+	)}
+	{name === 'podcast' && (
+		<>
+			<rect x="9" y="2" width="6" height="11" rx="3" />
+			<path d="M5 10a7 7 0 0 0 14 0" />
+			<line x1="12" y1="17" x2="12" y2="21" />
+			<line x1="8" y1="21" x2="16" y2="21" />
 		</>
 	)}
 	{name === 'mark' && (

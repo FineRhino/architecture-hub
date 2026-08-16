@@ -16,4 +16,5 @@ export const NAVIGATION = [
   { href: '/guides/', label: 'Guides' },
   { href: '/blog/', label: 'Articles' },
   { href: '/resources/', label: 'Resources' },
+  { href: '/podcasts/', label: 'Podcasts' },
 ];

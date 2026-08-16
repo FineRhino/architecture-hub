@@ -1,0 +1,63 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import Icon from '../../components/Icon.astro';
+import { SITE_TITLE } from '../../consts';
+
+type Episode = {
+	title: string;
+	description: string;
+	url: string;
+};
+
+const episodes: Episode[] = [
+	{
+		title: 'Architects of AI Change',
+		description:
+			'A podcast about the evolving role of enterprise software architects in the new world of AI and agentic systems.',
+		url: 'https://copilot.microsoft.com/shares/podcasts/5crTo94THxD3JBuUK8qFC',
+	},
+];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Podcasts | ${SITE_TITLE}`} description="Listen to conversations on enterprise AI architecture" />
+	</head>
+	<body>
+		<Header />
+		<main class="listing-main">
+			<div class="page-hero">
+				<span class="icon-badge is-guides"><Icon name="podcast" size={26} /></span>
+				<h1>Podcasts</h1>
+				<p>Conversations on enterprise AI architecture, agents, and the evolving role of the architect</p>
+			</div>
+
+			<div class="site-shell">
+				<Sidebar />
+				<div class="site-content">
+					<div class="listing-content">
+						{episodes.length === 0 ? (
+							<p class="empty-state">No episodes published yet. Check back soon!</p>
+						) : (
+							episodes.map((episode) => (
+								<a class="podcast-card" href={episode.url} target="_blank" rel="noopener noreferrer">
+									<span class="icon-badge is-guides"><Icon name="podcast" size={22} /></span>
+									<div class="podcast-card-body">
+										<h3>{episode.title}</h3>
+										<p class="podcast-card-desc">{episode.description}</p>
+										<span class="pill-link">Listen Now <Icon name="external-link" size={16} /></span>
+									</div>
+								</a>
+							))
+						)}
+					</div>
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
