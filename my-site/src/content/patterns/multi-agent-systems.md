@@ -1,7 +1,7 @@
 ---
 title: "Multi-Agent Systems: Coordinating AI Agents"
 description: "Patterns for orchestrating multiple specialized agents to solve complex tasks"
-pubDate: 2024-08-19
+pubDate: 2026-08-16
 tags: ["patterns", "agents", "architecture", "orchestration"]
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "OpenAI GPT Models"
 description: "Compare GPT-4o, GPT-4 Turbo, and o-series models on capability, cost, and use case fit"
-pubDate: 2024-08-17
+pubDate: 2026-08-16
 category: "LLM Providers"
 url: "https://platform.openai.com"
 tags: ["llm", "openai", "multimodal", "function-calling"]

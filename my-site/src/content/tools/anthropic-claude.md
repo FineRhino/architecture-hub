@@ -1,7 +1,7 @@
 ---
 title: "Anthropic Claude"
 description: "Claude's model family, context windows, and where it fits alongside other LLM providers"
-pubDate: 2024-08-18
+pubDate: 2026-08-16
 category: "LLM Providers"
 url: "https://www.anthropic.com"
 tags: ["llm", "anthropic", "claude", "function-calling"]

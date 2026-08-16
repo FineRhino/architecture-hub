@@ -1,7 +1,7 @@
 ---
 title: "Fine-Tuning vs. RAG: A Decision Framework"
 description: "How to decide between fine-tuning, retrieval-augmented generation, or both"
-pubDate: 2024-08-20
+pubDate: 2026-08-16
 tags: ["patterns", "fine-tuning", "rag", "decision-framework"]
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Building Your First RAG System"
 description: "A step-by-step guide to building a retrieval-augmented generation pipeline, from document ingestion to grounded answers"
-pubDate: 2024-08-21
+pubDate: 2026-08-16
 tags: ["guides", "implementation", "rag"]
 ---
 
