@@ -1,0 +1,119 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div class="feedback" data-feedback>
+	<span class="feedback-prompt" data-feedback-prompt>Was this helpful?</span>
+	<span class="feedback-thanks" data-feedback-thanks hidden>Thanks for the feedback!</span>
+	<div class="feedback-buttons" data-feedback-buttons>
+		<button type="button" class="feedback-btn" data-vote="up" aria-label="Yes, this was helpful" aria-pressed="false">
+			<Icon name="thumbs-up" size={18} />
+		</button>
+		<button type="button" class="feedback-btn" data-vote="down" aria-label="No, this was not helpful" aria-pressed="false">
+			<Icon name="thumbs-down" size={18} />
+		</button>
+	</div>
+</div>
+
+<script>
+	function initFeedback(root: HTMLElement) {
+		const key = `feedback:${window.location.pathname}`;
+		const buttons = root.querySelectorAll<HTMLButtonElement>('[data-vote]');
+		const prompt = root.querySelector<HTMLElement>('[data-feedback-prompt]');
+		const thanks = root.querySelector<HTMLElement>('[data-feedback-thanks]');
+
+		const applyVoted = (vote: string) => {
+			buttons.forEach((btn) => {
+				const isVoted = btn.dataset.vote === vote;
+				btn.setAttribute('aria-pressed', String(isVoted));
+				btn.classList.toggle('is-active', isVoted);
+				btn.disabled = true;
+			});
+			prompt?.setAttribute('hidden', '');
+			thanks?.removeAttribute('hidden');
+		};
+
+		const existing = localStorage.getItem(key);
+		if (existing) applyVoted(existing);
+
+		buttons.forEach((btn) => {
+			btn.addEventListener('click', () => {
+				const vote = btn.dataset.vote as string;
+				localStorage.setItem(key, vote);
+				applyVoted(vote);
+
+				const gtag = (window as typeof window & { gtag?: (...args: unknown[]) => void }).gtag;
+				if (typeof gtag === 'function') {
+					gtag('event', 'article_feedback', {
+						vote,
+						article_path: window.location.pathname,
+						article_title: document.title,
+					});
+				}
+			});
+		});
+	}
+
+	document.querySelectorAll<HTMLElement>('[data-feedback]').forEach(initFeedback);
+</script>
+
+<style>
+	.feedback {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-top: 3rem;
+		padding: 1.25rem 1.5rem;
+		border: 1px solid var(--border-color);
+		border-radius: var(--radius-md);
+		background: var(--surface-subtle);
+	}
+	.feedback-prompt,
+	.feedback-thanks {
+		font-size: 0.92rem;
+		font-weight: 600;
+		color: var(--text-primary);
+	}
+	.feedback-buttons {
+		display: flex;
+		gap: 0.5rem;
+		margin-left: auto;
+	}
+	.feedback-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: var(--radius-sm);
+		border: 1px solid var(--border-color);
+		background: var(--surface);
+		color: var(--text-muted);
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+	.feedback-btn:hover:not(:disabled) {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+	.feedback-btn.is-active {
+		border-color: var(--accent);
+		background: var(--accent-soft);
+		color: var(--accent-dark);
+	}
+	.feedback-btn:disabled {
+		cursor: default;
+	}
+	.feedback-btn:disabled:not(.is-active) {
+		opacity: 0.4;
+	}
+
+	@media (max-width: 480px) {
+		.feedback {
+			flex-wrap: wrap;
+		}
+		.feedback-buttons {
+			margin-left: 0;
+		}
+	}
+</style>
