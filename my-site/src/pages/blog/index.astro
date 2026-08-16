@@ -5,7 +5,9 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import Sidebar from '../../components/Sidebar.astro';
+import Icon from '../../components/Icon.astro';
+import { SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -15,12 +17,9 @@ const posts = (await getCollection('blog')).sort(
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={`Articles | ${SITE_TITLE}`} description="Insights, case studies, and deep dives into enterprise AI architecture" />
 		<style>
-			main {
-				width: 960px;
-			}
-			ul {
+			.post-grid {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 2rem;
@@ -28,59 +27,59 @@ const posts = (await getCollection('blog')).sort(
 				margin: 0;
 				padding: 0;
 			}
-			ul li {
+			.post-grid li {
 				width: calc(50% - 1rem);
 			}
-			ul li * {
+			.post-grid li * {
 				text-decoration: none;
 				transition: 0.2s ease;
 			}
-			ul li:first-child {
+			.post-grid li:first-child {
 				width: 100%;
 				margin-bottom: 1rem;
 				text-align: center;
 			}
-			ul li:first-child img {
+			.post-grid li:first-child img {
 				width: 100%;
 			}
-			ul li:first-child .title {
+			.post-grid li:first-child .title {
 				font-size: 2.369rem;
 			}
-			ul li img {
+			.post-grid li img {
 				margin-bottom: 0.5rem;
-				border-radius: 12px;
+				border-radius: var(--radius-md);
 			}
-			ul li a {
+			.post-grid li a {
 				display: block;
 			}
-			.title {
+			.post-title {
 				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
+				color: var(--text-primary);
+				line-height: 1.2;
 			}
-			.date {
+			.post-date {
 				margin: 0;
-				color: rgb(var(--gray));
+				color: var(--text-muted);
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
+			.post-grid li a:hover .post-title,
+			.post-grid li a:hover .post-date {
+				color: var(--accent);
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+			.post-grid a:hover img {
+				box-shadow: var(--shadow-md);
 			}
 			@media (max-width: 720px) {
-				ul {
+				.post-grid {
 					gap: 0.5em;
 				}
-				ul li {
+				.post-grid li {
 					width: 100%;
 					text-align: center;
 				}
-				ul li:first-child {
+				.post-grid li:first-child {
 					margin-bottom: 0;
 				}
-				ul li:first-child .title {
+				.post-grid li:first-child .title {
 					font-size: 1.563em;
 				}
 			}
@@ -88,26 +87,39 @@ const posts = (await getCollection('blog')).sort(
 	</head>
 	<body>
 		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+		<main class="listing-main">
+			<div class="page-hero">
+				<span class="icon-badge is-blog"><Icon name="document" size={26} /></span>
+				<h1>Articles</h1>
+				<p>Insights, case studies, and deep dives into enterprise AI architecture</p>
+			</div>
+
+			<div class="site-shell">
+				<Sidebar />
+				<div class="site-content">
+					<div class="listing-content">
+						{posts.length === 0 ? (
+							<p class="empty-state">No articles published yet. Check back soon!</p>
+						) : (
+							<ul class="post-grid">
+								{posts.map((post) => (
+									<li>
+										<a href={`/blog/${post.id}/`}>
+											{post.data.heroImage && (
+												<Image width={720} height={360} src={post.data.heroImage} alt="" />
+											)}
+											<h4 class="post-title">{post.data.title}</h4>
+											<p class="post-date">
+												<FormattedDate date={post.data.pubDate} />
+											</p>
+										</a>
+									</li>
+								))}
+							</ul>
+						)}
+					</div>
+				</div>
+			</div>
 		</main>
 		<Footer />
 	</body>

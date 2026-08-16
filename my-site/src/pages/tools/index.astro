@@ -2,6 +2,7 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
+import Sidebar from '../../components/Sidebar.astro';
 import Icon from '../../components/Icon.astro';
 import { getCollection } from 'astro:content';
 import { SITE_TITLE } from '../../consts';
@@ -34,58 +35,63 @@ sortedTools.forEach((tool) => {
 				<p>Frameworks, platforms, and tools for building AI systems</p>
 			</div>
 
-			<div class="listing-content">
-				<p class="listing-intro">
-					Explore the ecosystem of tools and technologies available to modern architects. From orchestration
-					frameworks to vector databases, find the right technology for your use case.
-				</p>
+			<div class="site-shell">
+				<Sidebar />
+				<div class="site-content">
+					<div class="listing-content">
+						<p class="listing-intro">
+							Explore the ecosystem of tools and technologies available to modern architects. From orchestration
+							frameworks to vector databases, find the right technology for your use case.
+						</p>
 
-				{Array.from(groupedTools.entries()).map(([category, categoryTools]) => (
-					<div class="category-block">
-						<h2 class="category-title"><span class="dot"></span> {category}</h2>
-						{categoryTools.length === 0 ? (
-							<p class="empty-state">No tools in this category yet.</p>
-						) : (
-							<ul class="card-list">
-								{categoryTools.map((tool) => (
-									<li class="entry-card">
-										<span class="icon-badge is-tools"><Icon name="sliders" size={20} /></span>
-										<div class="entry-card-body">
-											<h3>
-												<a href={`/tools/${tool.id}/`}>{tool.data.title}</a>
-												{tool.data.url && (
-													<a
-														class="external-link-icon"
-														href={tool.data.url}
-														target="_blank"
-														rel="noopener noreferrer"
-														aria-label={`${tool.data.title} official site`}
-													>
-														<Icon name="external-link" size={14} />
-													</a>
-												)}
-											</h3>
-											<p class="entry-description">{tool.data.description}</p>
-											{tool.data.tags && (
-												<div class="tags">
-													{tool.data.tags.map((tag) => (
-														<span class="tag">{tag}</span>
-													))}
+						{Array.from(groupedTools.entries()).map(([category, categoryTools]) => (
+							<div class="category-block">
+								<h2 class="category-title"><span class="dot"></span> {category}</h2>
+								{categoryTools.length === 0 ? (
+									<p class="empty-state">No tools in this category yet.</p>
+								) : (
+									<ul class="card-list">
+										{categoryTools.map((tool) => (
+											<li class="entry-card">
+												<span class="icon-badge is-tools"><Icon name="sliders" size={20} /></span>
+												<div class="entry-card-body">
+													<h3>
+														<a href={`/tools/${tool.id}/`}>{tool.data.title}</a>
+														{tool.data.url && (
+															<a
+																class="external-link-icon"
+																href={tool.data.url}
+																target="_blank"
+																rel="noopener noreferrer"
+																aria-label={`${tool.data.title} official site`}
+															>
+																<Icon name="external-link" size={14} />
+															</a>
+														)}
+													</h3>
+													<p class="entry-description">{tool.data.description}</p>
+													{tool.data.tags && (
+														<div class="tags">
+															{tool.data.tags.map((tag) => (
+																<span class="tag">{tag}</span>
+															))}
+														</div>
+													)}
+													<div class="meta-row">
+														<span class="meta-item">
+															<Icon name="clock" size={14} />
+															{new Date(tool.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+														</span>
+													</div>
 												</div>
-											)}
-											<div class="meta-row">
-												<span class="meta-item">
-													<Icon name="clock" size={14} />
-													{new Date(tool.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-												</span>
-											</div>
-										</div>
-									</li>
-								))}
-							</ul>
-						)}
+											</li>
+										))}
+									</ul>
+								)}
+							</div>
+						))}
 					</div>
-				))}
+				</div>
 			</div>
 		</main>
 		<Footer />

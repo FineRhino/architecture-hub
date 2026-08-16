@@ -2,6 +2,7 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
+import Sidebar from '../../components/Sidebar.astro';
 import Icon from '../../components/Icon.astro';
 import { getCollection } from 'astro:content';
 import { SITE_TITLE } from '../../consts';
@@ -24,42 +25,47 @@ const sortedGuides = guides.sort((a, b) => new Date(b.data.pubDate).getTime() - 
 				<p>Practical step-by-step guides for building and deploying AI systems</p>
 			</div>
 
-			<div class="listing-content">
-				<p class="listing-intro">
-					Hands-on guides that walk you through building real AI systems. From rapid prototyping with vibe-coding
-					to production deployment with modern AI-DLC frameworks, these guides provide practical implementation approaches.
-				</p>
+			<div class="site-shell">
+				<Sidebar />
+				<div class="site-content">
+					<div class="listing-content">
+						<p class="listing-intro">
+							Hands-on guides that walk you through building real AI systems. From rapid prototyping with vibe-coding
+							to production deployment with modern AI-DLC frameworks, these guides provide practical implementation approaches.
+						</p>
 
-				{sortedGuides.length === 0 ? (
-					<p class="empty-state">No guides published yet. Check back soon!</p>
-				) : (
-					<ul class="card-list">
-						{sortedGuides.map((guide) => (
-							<li class="entry-card">
-								<span class="icon-badge is-guides"><Icon name="compass" size={20} /></span>
-								<div class="entry-card-body">
-									<h3>
-										<a href={`/guides/${guide.id}/`}>{guide.data.title}</a>
-									</h3>
-									<p class="entry-description">{guide.data.description}</p>
-									{guide.data.tags && (
-										<div class="tags">
-											{guide.data.tags.map((tag) => (
-												<span class="tag">{tag}</span>
-											))}
+						{sortedGuides.length === 0 ? (
+							<p class="empty-state">No guides published yet. Check back soon!</p>
+						) : (
+							<ul class="card-list">
+								{sortedGuides.map((guide) => (
+									<li class="entry-card">
+										<span class="icon-badge is-guides"><Icon name="compass" size={20} /></span>
+										<div class="entry-card-body">
+											<h3>
+												<a href={`/guides/${guide.id}/`}>{guide.data.title}</a>
+											</h3>
+											<p class="entry-description">{guide.data.description}</p>
+											{guide.data.tags && (
+												<div class="tags">
+													{guide.data.tags.map((tag) => (
+														<span class="tag">{tag}</span>
+													))}
+												</div>
+											)}
+											<div class="meta-row">
+												<span class="meta-item">
+													<Icon name="clock" size={14} />
+													{new Date(guide.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+												</span>
+											</div>
 										</div>
-									)}
-									<div class="meta-row">
-										<span class="meta-item">
-											<Icon name="clock" size={14} />
-											{new Date(guide.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-										</span>
-									</div>
-								</div>
-							</li>
-						))}
-					</ul>
-				)}
+									</li>
+								))}
+							</ul>
+						)}
+					</div>
+				</div>
 			</div>
 		</main>
 		<Footer />

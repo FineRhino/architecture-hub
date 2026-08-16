@@ -1,0 +1,358 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import Icon from '../../components/Icon.astro';
+import { SITE_TITLE } from '../../consts';
+
+type Article = {
+	title: string;
+	source: string;
+	url: string;
+	published?: string;
+	why: string;
+	stars: string;
+	bestFor: string;
+};
+
+const sections: { id: string; title: string; description: string; articles: Article[] }[] = [
+	{
+		id: 'enterprise-architecture',
+		title: 'A. The New Enterprise Architecture: Designing Systems for AI and Agents',
+		description:
+			'How architecture itself changes in the AI era — reference architectures, agent orchestration patterns, and where agents fit alongside microservices.',
+		articles: [
+			{
+				title: 'Architecture in the Age of AI: Change and Opportunity',
+				source: 'InfoQ',
+				url: 'https://www.infoq.com/minibooks/architecture-age-ai-opportunity/',
+				published: 'January 23, 2026',
+				why: "Probably the best broad starting point for an enterprise architect. This collection specifically examines how architecture itself changes in the AI era: platforms, automation, decentralized decision-making, and the changing role of the architect from design authority toward coach and enabler.",
+				stars: '★★★★★',
+				bestFor: 'Enterprise architecture strategy and operating model.',
+			},
+			{
+				title: 'Optimizing Application Architectures for AI: From Monoliths to Intelligent Agents',
+				source: 'Red Hat',
+				url: 'https://www.redhat.com/en/blog/optimizing-application-architectures-ai-monoliths-intelligent-agents-part-1',
+				published: 'August 20, 2025',
+				why: 'Directly addresses the architectural evolution from monolith → microservices → intelligent/agentic systems. It asks what becomes different about enterprise applications when autonomous reasoning components become first-class architectural elements.',
+				stars: '★★★★★',
+				bestFor: 'Understanding the next architectural paradigm after microservices.',
+			},
+			{
+				title: 'From Microservices to AI Agents: The Evolution of Application Architecture',
+				source: 'IBM',
+				url: 'https://www.ibm.com/think/insights/evolution-application-architecture',
+				why: 'Makes the provocative argument that agents are becoming architectural building blocks that may complement, extend, and sometimes replace conventional microservices. Particularly useful for thinking about where deterministic services end and reasoning-based services begin.',
+				stars: '★★★★★',
+				bestFor: 'Enterprise/application architects.',
+			},
+			{
+				title: 'Architecting for Agentic AI Development on AWS',
+				source: 'AWS Architecture Blog',
+				url: 'https://aws.amazon.com/blogs/architecture/architecting-for-agentic-ai-development-on-aws',
+				published: 'March 26, 2026',
+				why: 'One of the most interesting pieces I found. AWS argues that existing architectures can actually constrain coding agents and explains how systems and codebases should be structured so AI agents can rapidly understand, change, validate, and iterate on them.',
+				stars: '★★★★★',
+				bestFor: 'The intersection of system architecture and AI-assisted development.',
+			},
+			{
+				title: 'Emerging Patterns in Building GenAI Products',
+				source: 'Martin Fowler',
+				url: 'https://martinfowler.com/articles/gen-ai-patterns.html',
+				why: "An excellent pattern-oriented treatment of production GenAI architecture. It emphasizes evaluation, retrieval, augmentation, handling nondeterminism, and other concerns that don't exist—or don't exist to the same degree—in conventional application architecture.",
+				stars: '★★★★★',
+				bestFor: 'Translating GenAI prototypes into production architecture.',
+			},
+			{
+				title: 'Agentic AI Architecture',
+				source: 'InfoQ',
+				url: 'https://www.infoq.com/minibooks/agentic-ai-architecture/',
+				published: 'July 3, 2026',
+				why: 'A highly relevant collection explicitly positioning agentic architecture as a new category of software architecture. It covers decision decomposition, distributed agent systems, memory, knowledge architecture, context engineering and other emerging architectural disciplines.',
+				stars: '★★★★★',
+				bestFor: 'Architects looking several years ahead.',
+			},
+			{
+				title: 'Agentic AI Architecture in the Enterprise',
+				source: 'AWS Prescriptive Guidance',
+				url: 'https://docs.aws.amazon.com/prescriptive-guidance/latest/govern-architect-agentic-ai/enterprise-architecture.html',
+				why: 'More concrete than most conceptual articles. AWS lays out an enterprise reference architecture with layers for applications, agents, runtime/orchestration, models, tools and enterprise knowledge, plus cross-cutting governance concerns.',
+				stars: '★★★★★',
+				bestFor: 'Creating an enterprise AI reference architecture.',
+			},
+			{
+				title: 'Choose a Design Pattern for Your Agentic AI System',
+				source: 'Google Cloud Architecture Center',
+				url: 'https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system',
+				why: 'Useful because it doesn’t assume "multi-agent" is automatically better. Google compares architectural patterns for organizing agents, models and orchestration and helps determine which degree of autonomy is justified.',
+				stars: '★★★★★',
+				bestFor: 'Solution architecture and pattern selection.',
+			},
+			{
+				title: 'AI Agent Orchestration Patterns',
+				source: 'Microsoft Azure Architecture Center',
+				url: 'https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns',
+				published: 'February 12, 2026',
+				why: "Microsoft's architecture guide covers sequential, concurrent, group-chat, handoff and other multi-agent orchestration patterns. Think of these as an emerging equivalent to the integration and distributed-system patterns architects already use.",
+				stars: '★★★★★',
+				bestFor: 'Architects designing multi-agent enterprise workflows.',
+			},
+			{
+				title: 'What Are Compound AI Systems?',
+				source: 'Databricks',
+				url: 'https://www.databricks.com/blog/what-are-compound-ai-systems',
+				why: 'One of the key conceptual shifts to understand. Enterprise AI applications increasingly aren’t "an LLM"; they are systems of models + retrieval + tools + APIs + agents + business logic + evaluation. Databricks calls these Compound AI Systems.',
+				stars: '★★★★★',
+				bestFor: 'Developing the correct mental model for modern AI architecture.',
+			},
+			{
+				title: 'AI Agent Systems: Modular Engineering for Reliable Enterprise AI Applications',
+				source: 'Databricks',
+				url: 'https://www.databricks.com/blog/ai-agent-systems',
+				published: 'November 13, 2024',
+				why: 'Extends the Compound AI Systems concept into modular agent architectures. Particularly good for enterprise architects because it treats AI systems as engineering systems rather than magical models.',
+				stars: '★★★★★',
+				bestFor: 'Reliability, modularity and enterprise AI engineering.',
+			},
+			{
+				title: 'Building Effective AI Agents',
+				source: 'Anthropic',
+				url: 'https://www.anthropic.com/engineering/building-effective-agents',
+				published: 'December 19, 2024',
+				why: 'One of the foundational agent architecture articles. It distinguishes workflows from truly autonomous agents and explains patterns such as routing, parallelization, orchestrator-workers and evaluator-optimizer loops. It also makes a valuable case for avoiding unnecessary complexity.',
+				stars: '★★★★★',
+				bestFor: 'Determining when—and when not—to use agents.',
+			},
+		],
+	},
+	{
+		id: 'data-context-architecture',
+		title: 'B. The Data, Knowledge and Context Architecture AI Requires',
+		description: 'Why enterprise information architecture has to change to support agents, and what layered context and context engineering actually mean.',
+		articles: [
+			{
+				title: 'The Importance of Layered Context in Enterprise Data Architecture',
+				source: 'Thoughtworks',
+				url: 'https://www.thoughtworks.com/en-au/insights/blog/generative-ai/importance-layered-context-enterprise-data-architecture',
+				why: "Extremely relevant to enterprise architecture. It argues that simply building a huge enterprise knowledge graph isn't sufficient because real enterprise knowledge is fragmented across databases, Jira, Confluence, legacy systems, documentation and organizational knowledge. It proposes thinking about a layered context architecture for agents.",
+				stars: '★★★★★',
+				bestFor: 'Data architecture, knowledge architecture and enterprise RAG.',
+			},
+			{
+				title: 'Effective Context Engineering for AI Agents',
+				source: 'Anthropic',
+				url: 'https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents',
+				published: 'September 29, 2025',
+				why: '"Prompt engineering" is increasingly giving way to context engineering—architecting what information, instructions, tools, memory and state an AI receives at each point in a workflow. This is becoming a legitimate architecture discipline in its own right.',
+				stars: '★★★★★',
+				bestFor: 'Architects designing AI runtime/context layers.',
+			},
+			{
+				title: 'Building Reliable Agentic AI Systems',
+				source: 'Martin Fowler / Bayer Case Study',
+				url: 'https://martinfowler.com/articles/reliable-llm-bayer.html',
+				published: 'June 16, 2026',
+				why: "Valuable because it isn't theoretical. It examines Bayer's PRINCE system and the architecture and engineering decisions behind a production Agentic RAG implementation for preclinical research.",
+				stars: '★★★★★',
+				bestFor: 'Seeing what enterprise agent architecture looks like in the real world.',
+			},
+		],
+	},
+	{
+		id: 'ai-native-engineering',
+		title: 'C. AI Is Also Changing How Architecture and Software Are Created',
+		description: 'How repositories, tooling, tests, and documentation need to change when AI agents are doing significant amounts of the engineering.',
+		articles: [
+			{
+				title: 'Harness Engineering: Leveraging Codex in an Agent-First World',
+				source: 'OpenAI',
+				url: 'https://openai.com/index/harness-engineering/',
+				published: 'February 11, 2026',
+				why: 'This may be the most important article in the second category. Rather than asking how AI fits into the application, it asks: how should we architect our repositories, tooling, tests, documentation and engineering environment when AI agents are doing significant amounts of the engineering? A key idea is that architectural constraints, automated verification and machine-readable context become more important—not less—when agents produce code.',
+				stars: '★★★★★',
+				bestFor: 'Understanding AI-native software engineering and architecture practices.',
+			},
+			{
+				title: 'Harness Engineering for Coding Agent Users',
+				source: 'Martin Fowler',
+				url: 'https://martinfowler.com/articles/harness-engineering.html',
+				why: 'A complementary practitioner view of the same emerging discipline. Architectural rules, tests, linters, documentation and codebase structure become the harness within which coding agents operate. Agents can also help discover existing architecture and generate structural tests and rules.',
+				stars: '★★★★★',
+				bestFor: 'Enterprise architects governing AI-generated software.',
+			},
+			{
+				title: 'The Ferrari in the Jungle: AI-Driven Software Development in Large Enterprises',
+				source: 'Thoughtworks',
+				url: 'https://www.thoughtworks.com/insights/blog/generative-ai/The-Ferrari-in-jungle-AI-driven-software-development-in-large-enterprises',
+				why: 'Especially relevant for a large enterprise. Thoughtworks argues that AI-assisted engineering exposes weaknesses that humans have traditionally worked around: undocumented dependencies, ambiguous contracts, tribal knowledge, poor API specifications and excessive architectural complexity. One of its strongest conclusions is that organizations may need more capability decomposition, clear contracts and spec-driven development to allow AI to work effectively.',
+				stars: '★★★★★',
+				bestFor: 'Enterprise modernization and architecture governance.',
+			},
+			{
+				title: 'Spec-Driven Development with AI',
+				source: 'GitHub',
+				url: 'https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/',
+				published: 'September 2, 2025',
+				why: 'An important counterpoint to "vibe coding." Instead of starting with code, teams create machine-readable specifications and let agents operate against those specifications. That potentially elevates requirements, domain models, interfaces and architectural specifications relative to hand-written implementation code.',
+				stars: '★★★★½',
+				bestFor: 'Understanding how architecture artifacts may become executable inputs to AI development agents.',
+			},
+			{
+				title: 'AI and Software Delivery',
+				source: 'Thoughtworks Looking Glass 2026',
+				url: 'https://www.thoughtworks.com/en-us/insights/looking-glass/looking-glass-2026/AI-and-software-delivery',
+				why: 'Takes the broadest view of AI-native delivery. Thoughtworks describes AI-first software delivery (AIFSD) as applying generative and agentic systems across requirements, design, development, testing, deployment and maintenance—not merely adding Copilot to an IDE. It also discusses AI as a mechanism for legacy modernization, architectural integrity, quality and pipeline improvement.',
+				stars: '★★★★★',
+				bestFor: 'Enterprise architects thinking about the future SDLC and operating model.',
+			},
+		],
+	},
+];
+
+const readingOrder = [
+	{ label: 'Architecture in the Age of AI — InfoQ', note: 'establish the big-picture EA perspective.', href: sections[0].articles[0].url },
+	{ label: 'From Microservices to AI Agents — IBM', note: 'understand the architectural paradigm shift.', href: sections[0].articles[2].url },
+	{ label: 'Emerging Patterns in Building GenAI Products — Martin Fowler', note: 'learn the new application patterns.', href: sections[0].articles[4].url },
+	{ label: 'Agentic AI Architecture in the Enterprise — AWS', note: 'translate those ideas into an enterprise reference architecture.', href: sections[0].articles[6].url },
+	{ label: 'Layered Context in Enterprise Data Architecture — Thoughtworks', note: 'understand why enterprise information architecture has to change.', href: sections[1].articles[0].url },
+	{ label: 'Harness Engineering — OpenAI', note: 'see how architecture changes when agents start building the software.', href: sections[2].articles[0].url },
+	{ label: 'The Ferrari in the Jungle — Thoughtworks', note: 'connect agentic engineering back to the realities of a large enterprise.', href: sections[2].articles[2].url },
+];
+
+const layers = [
+	'Experience / Interaction Layer',
+	'Agent & Reasoning Layer',
+	'Orchestration / Workflow Layer',
+	'Context & Memory Layer',
+	'Enterprise Knowledge / Semantic Layer',
+	'Tool & Capability Layer — APIs, MCP, services, events',
+	'Existing Enterprise Applications / Microservices',
+	'Operational Data + Lakehouse + Documents + Knowledge',
+];
+
+const oldFlow = ['Requirements', 'Architecture', 'Developer writes most code', 'Test', 'Deploy'];
+const newFlow = ['Business intent', 'Specification', 'Architecture constraints', 'Agent-generated implementation', 'Automated verification / evaluation', 'Human architectural oversight'];
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Resources | ${SITE_TITLE}`} description="Curated external reading on enterprise architecture in the age of AI and agents" />
+	</head>
+	<body>
+		<Header />
+		<main class="listing-main">
+			<div class="page-hero">
+				<span class="icon-badge is-blog"><Icon name="bookmark" size={26} /></span>
+				<h1>Resources</h1>
+				<p>Curated external reading on enterprise architecture in the age of AI and agents</p>
+			</div>
+
+			<div class="site-shell">
+				<Sidebar />
+				<div class="site-content">
+					<div class="listing-content">
+						<p class="listing-intro">
+							A curated reading list on how enterprise architecture is changing as AI and agents become
+							first-class system components — and how AI is changing the way architecture and software
+							get built in the first place.
+						</p>
+
+						{sections.map((section) => (
+							<div class="resource-section">
+								<h2 class="resource-section-title">{section.title}</h2>
+								<p class="resource-section-desc">{section.description}</p>
+								{section.articles.map((article) => (
+									<a class="resource-card" href={article.url} target="_blank" rel="noopener noreferrer">
+										<div class="resource-card-title">
+											{article.title}
+											<span class="external-link-icon"><Icon name="external-link" size={14} /></span>
+										</div>
+										<div class="resource-source">{article.source}</div>
+										<p class="resource-why">{article.why}</p>
+										<div class="resource-meta-row">
+											{article.published && <span><strong>Published:</strong> {article.published}</span>}
+											<span class="stars"><strong>Relevance:</strong> {article.stars}</span>
+											<span><strong>Best for:</strong> {article.bestFor}</span>
+										</div>
+									</a>
+								))}
+							</div>
+						))}
+
+						<div class="resource-section">
+							<h2 class="resource-section-title">Recommended Reading Order</h2>
+							<p class="resource-section-desc">
+								If you don't want to read all 20 initially, start with these seven, in this order:
+							</p>
+							<ol class="reading-order">
+								{readingOrder.map((item) => (
+									<li>
+										<a href={item.href} target="_blank" rel="noopener noreferrer">{item.label}</a> — {item.note}
+									</li>
+								))}
+							</ol>
+						</div>
+
+						<div class="resource-section">
+							<h2 class="resource-section-title">The Architectural Shift These Articles Point Toward</h2>
+							<p class="resource-section-desc">
+								Taken together, this reading suggests something considerably larger than inserting an
+								"AI layer" into a conventional three-tier architecture. The emerging enterprise pattern
+								looks more like a stack of layers, with several concerns cutting vertically across all of them:
+							</p>
+
+							<ul class="layer-stack">
+								{layers.map((layer, i) => (
+									<>
+										<li><div class="layer-box">{layer}</div></li>
+										{i < layers.length - 1 && (
+											<li class="layer-arrow"><Icon name="arrow-right" size={16} /></li>
+										)}
+									</>
+								))}
+							</ul>
+							<div class="cross-cutting">
+								Identity &amp; authorization · policy · guardrails · evaluation · observability · auditability · lineage · human approval · cost/latency management
+							</div>
+
+							<p class="resource-section-desc" style="margin-top: 2.5rem;">
+								The other major change is on the engineering side. The emerging AI-native SDLC increasingly
+								resembles a specification-driven flow rather than a hand-written one:
+							</p>
+
+							<div class="flow-chips">
+								{oldFlow.map((step, i) => (
+									<>
+										<span class="flow-chip">{step}</span>
+										{i < oldFlow.length - 1 && <Icon name="arrow-right" size={14} class="flow-sep" />}
+									</>
+								))}
+							</div>
+							<p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.25rem 0 1.5rem;">↑ traditional flow</p>
+
+							<div class="flow-chips">
+								{newFlow.map((step, i) => (
+									<>
+										<span class="flow-chip">{step}</span>
+										{i < newFlow.length - 1 && <Icon name="arrow-right" size={14} class="flow-sep" />}
+									</>
+								))}
+							</div>
+							<p style="font-size: 0.85rem; color: var(--text-muted); margin: 0.25rem 0 0;">↑ emerging AI-native flow</p>
+
+							<p class="resource-section-desc" style="margin-top: 1.5rem;">
+								That second shift could ultimately be every bit as consequential for enterprise architects
+								as putting AI capabilities into the systems themselves.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

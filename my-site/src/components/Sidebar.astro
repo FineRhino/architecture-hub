@@ -1,0 +1,85 @@
+---
+import Icon, { type IconName } from './Icon.astro';
+
+const items: { href: string; label: string; icon: IconName }[] = [
+	{ href: '/patterns', label: 'Patterns', icon: 'layers' },
+	{ href: '/tools', label: 'Tools & Tech', icon: 'sliders' },
+	{ href: '/guides', label: 'Guides', icon: 'compass' },
+	{ href: '/blog', label: 'Articles', icon: 'document' },
+	{ href: '/resources', label: 'Resources', icon: 'bookmark' },
+];
+
+const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+---
+
+<aside class="sidebar" aria-label="Explore">
+	<nav>
+		<span class="sidebar-heading">Explore</span>
+		<ul>
+			{items.map((item) => (
+				<li>
+					<a href={item.href} class:list={[{ active: isActive(item.href) }]} aria-current={isActive(item.href) ? 'page' : undefined}>
+						<Icon name={item.icon} size={18} />
+						{item.label}
+					</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+</aside>
+
+<style>
+	.sidebar {
+		width: 220px;
+		flex-shrink: 0;
+	}
+	nav {
+		position: sticky;
+		top: calc(56px + 2rem);
+	}
+	.sidebar-heading {
+		display: block;
+		font-size: 0.75rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--text-muted);
+		margin: 0 0 0.75rem 0.75rem;
+	}
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+	}
+	a {
+		display: flex;
+		align-items: center;
+		gap: 0.7rem;
+		padding: 0.55rem 0.75rem;
+		border-radius: var(--radius-sm);
+		color: var(--text-secondary);
+		text-decoration: none;
+		font-size: 0.92rem;
+		font-weight: 500;
+		transition: background 0.2s ease, color 0.2s ease;
+	}
+	a:hover {
+		background: var(--surface-subtle);
+		color: var(--text-primary);
+	}
+	a.active {
+		background: var(--accent-soft);
+		color: var(--accent-dark);
+		font-weight: 600;
+	}
+
+	@media (max-width: 960px) {
+		.sidebar {
+			display: none;
+		}
+	}
+</style>

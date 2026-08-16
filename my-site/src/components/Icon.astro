@@ -13,6 +13,7 @@ export type IconName =
 	| 'gauge'
 	| 'link'
 	| 'bar-chart'
+	| 'bookmark'
 	| 'mark';
 
 interface Props {
@@ -131,6 +132,9 @@ const { name, size = 24, class: className = '' } = Astro.props;
 			<line x1="19" y1="19" x2="19" y2="14" />
 			<line x1="3" y1="19" x2="21" y2="19" />
 		</>
+	)}
+	{name === 'bookmark' && (
+		<polygon points="6,4 18,4 18,20 12,16 6,20" />
 	)}
 	{name === 'mark' && (
 		<>
