@@ -7,7 +7,7 @@ export const SITE_URL = 'https://ai-architecture.dev';
 // Google Analytics 4 Measurement ID (starts with "G-"). Get one free at
 // analytics.google.com. Leave blank to disable analytics and feedback
 // tracking entirely — nothing loads or errors when this is empty.
-export const GA_MEASUREMENT_ID = '';
+export const GA_MEASUREMENT_ID = 'G-RCZGRH3JLC';
 
 export const NAVIGATION = [
   { href: '/', label: 'Home' },
