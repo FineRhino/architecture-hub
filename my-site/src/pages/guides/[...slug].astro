@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import ContentPage from '../../layouts/ContentPage.astro';
+
+export async function getStaticPaths() {
+	const guides = await getCollection('guides');
+	return guides.map((guide) => ({
+		params: { slug: guide.id },
+		props: guide,
+	}));
+}
+
+type Props = CollectionEntry<'guides'>;
+
+const guide = Astro.props;
+const { Content } = await render(guide);
+const readingTime = Math.max(1, Math.round((guide.body?.split(/\s+/).length ?? 0) / 200));
+---
+
+<ContentPage
+	title={guide.data.title}
+	description={guide.data.description}
+	pubDate={guide.data.pubDate}
+	updatedDate={guide.data.updatedDate}
+	heroImage={guide.data.heroImage}
+	kind="guides"
+	readingTime={readingTime}
+	backHref="/guides/"
+>
+	<Content />
+</ContentPage>

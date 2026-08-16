@@ -1,0 +1,147 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import Icon, { type IconName } from '../components/Icon.astro';
+
+type Props = CollectionEntry<'patterns' | 'tools' | 'guides'>['data'] & {
+	kind: 'patterns' | 'tools' | 'guides';
+	readingTime: number;
+	backHref: string;
+};
+
+const { title, description, pubDate, updatedDate, heroImage, kind, readingTime, backHref } = Astro.props;
+
+const kindMeta: Record<Props['kind'], { label: string; icon: IconName; accentClass: string }> = {
+	patterns: { label: 'Pattern', icon: 'layers', accentClass: 'is-patterns' },
+	tools: { label: 'Tool', icon: 'sliders', accentClass: 'is-tools' },
+	guides: { label: 'Guide', icon: 'compass', accentClass: 'is-guides' },
+};
+
+const { label, icon, accentClass } = kindMeta[kind];
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+		<style>
+			main {
+				width: 100%;
+				max-width: 100%;
+				margin: 0;
+				background: var(--surface);
+				padding: 0;
+			}
+			.title-band {
+				border-bottom: 1px solid var(--border-color);
+				background: var(--surface-subtle);
+				padding: 3rem 1.5em 2.5rem;
+			}
+			.title-inner {
+				width: 720px;
+				max-width: 100%;
+				margin: 0 auto;
+			}
+			.back-link {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+				color: var(--text-muted);
+				text-decoration: none;
+				font-weight: 500;
+				margin-bottom: 1.5rem;
+				font-size: 0.88rem;
+				transition: color 0.2s ease;
+			}
+			.back-link:hover {
+				color: var(--accent);
+			}
+			.back-link svg {
+				transform: rotate(180deg);
+			}
+			.kind-row {
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				margin-bottom: 1rem;
+			}
+			.kind-row .icon-badge {
+				width: 2.25rem;
+				height: 2.25rem;
+			}
+			.eyebrow.is-patterns { color: var(--color-patterns); }
+			.eyebrow.is-tools { color: var(--color-tools); }
+			.eyebrow.is-guides { color: var(--color-guides); }
+			.title-inner h1 {
+				font-size: 2.1rem;
+				margin-bottom: 0.9rem;
+			}
+			.meta-row {
+				margin-top: 0;
+			}
+			.hero-image {
+				width: 100%;
+			}
+			.hero-image img {
+				display: block;
+				margin: 2rem auto 0;
+				border-radius: var(--radius-md);
+				box-shadow: var(--shadow-md);
+			}
+			.prose {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 2.5em 1em 4em;
+			}
+			.prose :global(h2) {
+				font-size: 1.4rem;
+				margin-top: 2.25rem;
+			}
+			.prose :global(h3) {
+				font-size: 1.1rem;
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<div class="title-band">
+				<div class="title-inner">
+					<a href={backHref} class="back-link">
+						<Icon name="arrow-right" size={16} /> Back to {label}s
+					</a>
+					<div class="kind-row">
+						<span class={`icon-badge ${accentClass}`}><Icon name={icon} size={18} /></span>
+						<span class={`eyebrow ${accentClass}`}>{label}</span>
+					</div>
+					<h1>{title}</h1>
+					<div class="meta-row">
+						<span class="meta-item"><Icon name="clock" size={15} /> <FormattedDate date={pubDate} /></span>
+						<span class="meta-item"><Icon name="document" size={15} /> {readingTime} min read</span>
+						{updatedDate && (
+							<span class="meta-item">Updated <FormattedDate date={updatedDate} /></span>
+						)}
+					</div>
+				</div>
+				{heroImage && (
+					<div class="hero-image">
+						<div class="title-inner">
+							<Image width={1020} height={510} src={heroImage} alt={title} />
+						</div>
+					</div>
+				)}
+			</div>
+			<article>
+				<div class="prose">
+					<slot />
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>

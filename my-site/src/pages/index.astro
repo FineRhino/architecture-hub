@@ -2,48 +2,450 @@
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import Icon from '../components/Icon.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { getCollection } from 'astro:content';
+
+const [patterns, tools, guides, posts] = await Promise.all([
+	getCollection('patterns'),
+	getCollection('tools'),
+	getCollection('guides'),
+	getCollection('blog'),
+]);
+
+const stats = [
+	{ label: 'Architecture patterns', value: patterns.length },
+	{ label: 'Tools reviewed', value: tools.length },
+	{ label: 'Implementation guides', value: guides.length },
+	{ label: 'Articles published', value: posts.length },
+];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 100%;
+				max-width: 100%;
+				overflow: auto;
+				background: var(--surface);
+				padding: 0;
+			}
+
+			/* Hero */
+			.hero {
+				position: relative;
+				overflow: hidden;
+				background: var(--ink);
+				padding: 6rem 2rem 9rem;
+				text-align: center;
+				background-image:
+					linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+					linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+				background-size: 44px 44px;
+				background-position: center;
+			}
+			.hero::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: radial-gradient(680px circle at 18% 15%, rgba(79, 70, 229, 0.38), transparent 60%),
+					radial-gradient(620px circle at 88% 25%, rgba(6, 182, 212, 0.3), transparent 55%),
+					radial-gradient(500px circle at 50% 100%, rgba(124, 58, 237, 0.28), transparent 60%);
+				pointer-events: none;
+			}
+			.hero-graphic {
+				position: absolute;
+				top: 50%;
+				right: -6%;
+				transform: translateY(-50%);
+				width: 34rem;
+				max-width: 55vw;
+				opacity: 0.9;
+				pointer-events: none;
+			}
+			.hero-content {
+				position: relative;
+				z-index: 1;
+				max-width: 760px;
+				margin: 0 auto;
+			}
+			.hero-eyebrow {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				background: rgba(255, 255, 255, 0.08);
+				border: 1px solid rgba(255, 255, 255, 0.16);
+				color: #fff;
+				padding: 0.4rem 0.9rem;
+				border-radius: 999px;
+				font-size: 0.8rem;
+				font-weight: 600;
+				letter-spacing: 0.02em;
+				margin-bottom: 1.75rem;
+			}
+			.hero-eyebrow .dot {
+				width: 0.45rem;
+				height: 0.45rem;
+				border-radius: 50%;
+				background: var(--accent-2);
+				box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.25);
+			}
+			.hero h1 {
+				font-size: 3.1rem;
+				line-height: 1.1;
+				margin-bottom: 1.25rem;
+				font-weight: 800;
+				letter-spacing: -1.2px;
+				color: #fff;
+			}
+			.hero h1 .gradient-text {
+				background: linear-gradient(135deg, #a5b4fc 0%, #c4b5fd 45%, #67e8f9 100%);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+			.hero p {
+				font-size: 1.15rem;
+				max-width: 620px;
+				margin: 0 auto 2.5rem;
+				color: rgba(255, 255, 255, 0.72);
+				line-height: 1.7;
+				font-weight: 400;
+			}
+			.cta-buttons {
+				display: flex;
+				gap: 1rem;
+				justify-content: center;
+				flex-wrap: wrap;
+			}
+
+			/* Stats bar — overlaps hero/body seam */
+			.stats-bar {
+				position: relative;
+				z-index: 2;
+				max-width: 1080px;
+				margin: -4.5rem auto 0;
+				padding: 0 1.5rem;
+			}
+			.stats-grid {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				background: var(--surface);
+				border: 1px solid var(--border-color);
+				border-radius: var(--radius-lg);
+				box-shadow: var(--shadow-lg);
+				overflow: hidden;
+			}
+			.stat {
+				padding: 1.75rem 1rem;
+				text-align: center;
+				border-right: 1px solid var(--border-color);
+			}
+			.stat:last-child {
+				border-right: none;
+			}
+			.stat-value {
+				font-size: 2rem;
+				font-weight: 800;
+				letter-spacing: -0.5px;
+				background: var(--gradient-brand);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+			.stat-label {
+				margin-top: 0.35rem;
+				font-size: 0.82rem;
+				color: var(--text-muted);
+				font-weight: 500;
+			}
+
+			/* Sections */
+			.sections {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+				gap: 1.5rem;
+				padding: 5.5rem 2rem 4rem;
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+			.section-card {
+				position: relative;
+				background: var(--surface);
+				padding: 2rem;
+				border-radius: var(--radius-md);
+				border: 1px solid var(--border-color);
+				transition: all 0.3s ease;
+			}
+			.section-card:hover {
+				border-color: var(--border-strong);
+				box-shadow: var(--shadow-md);
+				transform: translateY(-4px);
+			}
+			.section-card .icon-badge {
+				margin-bottom: 1.25rem;
+			}
+			.section-card h2 {
+				color: var(--text-primary);
+				margin-bottom: 0.6rem;
+				font-size: 1.25rem;
+			}
+			.section-card p {
+				color: var(--text-secondary);
+				line-height: 1.65;
+				margin-bottom: 1.5rem;
+				font-size: 0.94rem;
+			}
+
+			/* Features */
+			.features {
+				background: var(--surface-subtle);
+				padding: 5rem 2rem;
+				border-top: 1px solid var(--border-color);
+				border-bottom: 1px solid var(--border-color);
+			}
+			.features-head {
+				text-align: center;
+				max-width: 620px;
+				margin: 0 auto 3rem;
+			}
+			.features-head .eyebrow {
+				justify-content: center;
+				display: flex;
+				margin-bottom: 0.75rem;
+			}
+			.features-head h2 {
+				font-size: 1.9rem;
+				margin-bottom: 0.5rem;
+			}
+			.features-head p {
+				font-size: 1rem;
+			}
+			.features-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 1.5rem;
+				max-width: 1200px;
+				margin: 0 auto;
+			}
+			.feature {
+				background: var(--surface);
+				padding: 1.75rem;
+				border-radius: var(--radius-md);
+				border: 1px solid var(--border-color);
+				transition: all 0.3s ease;
+			}
+			.feature:hover {
+				border-color: var(--border-strong);
+				box-shadow: var(--shadow-sm);
+				transform: translateY(-2px);
+			}
+			.feature .icon-badge {
+				width: 2.5rem;
+				height: 2.5rem;
+				margin-bottom: 1rem;
+			}
+			.feature h3 {
+				color: var(--text-primary);
+				margin-bottom: 0.5rem;
+				font-size: 1.05rem;
+			}
+			.feature p {
+				color: var(--text-secondary);
+				font-size: 0.9rem;
+				line-height: 1.55;
+				margin: 0;
+			}
+
+			@media (max-width: 900px) {
+				.hero-graphic {
+					display: none;
+				}
+				.stats-grid {
+					grid-template-columns: repeat(2, 1fr);
+				}
+				.stat:nth-child(2) {
+					border-right: none;
+				}
+				.stat:nth-child(1),
+				.stat:nth-child(2) {
+					border-bottom: 1px solid var(--border-color);
+				}
+			}
+			@media (max-width: 560px) {
+				.hero {
+					padding: 4.5rem 1.25rem 8rem;
+				}
+				.hero h1 {
+					font-size: 2.25rem;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			<section class="hero">
+				<svg class="hero-graphic" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+					<defs>
+						<linearGradient id="netLine" x1="0" y1="0" x2="420" y2="420" gradientUnits="userSpaceOnUse">
+							<stop offset="0" stop-color="#818cf8" />
+							<stop offset="1" stop-color="#67e8f9" />
+						</linearGradient>
+						<radialGradient id="netGlow" cx="0.5" cy="0.5" r="0.5">
+							<stop offset="0" stop-color="#818cf8" stop-opacity="0.55" />
+							<stop offset="1" stop-color="#818cf8" stop-opacity="0" />
+						</radialGradient>
+					</defs>
+
+					<circle cx="210" cy="210" r="70" fill="url(#netGlow)" />
+
+					<line x1="210" y1="210" x2="95" y2="120" stroke="url(#netLine)" stroke-width="1.5" opacity="0.55" />
+					<line x1="210" y1="210" x2="340" y2="95" stroke="url(#netLine)" stroke-width="1.5" opacity="0.55" />
+					<line x1="210" y1="210" x2="355" y2="270" stroke="url(#netLine)" stroke-width="1.5" opacity="0.5" />
+					<line x1="210" y1="210" x2="150" y2="345" stroke="url(#netLine)" stroke-width="1.5" opacity="0.55" />
+					<line x1="210" y1="210" x2="70" y2="290" stroke="url(#netLine)" stroke-width="1.5" opacity="0.4" />
+					<line x1="95" y1="120" x2="340" y2="95" stroke="url(#netLine)" stroke-width="1" opacity="0.25" />
+					<line x1="150" y1="345" x2="70" y2="290" stroke="url(#netLine)" stroke-width="1" opacity="0.25" />
+					<line x1="340" y1="95" x2="355" y2="270" stroke="url(#netLine)" stroke-width="1" opacity="0.2" />
+
+					<circle cx="210" cy="210" r="11" fill="#c7d2fe" />
+					<circle class="pulse-node" cx="95" cy="120" r="6" fill="#a5b4fc" />
+					<circle cx="340" cy="95" r="7" fill="#93c5fd" />
+					<circle class="pulse-node" cx="355" cy="270" r="5" fill="#67e8f9" />
+					<circle cx="150" cy="345" r="6" fill="#a5b4fc" />
+					<circle cx="70" cy="290" r="4" fill="#818cf8" />
+
+					<g opacity="0.35" stroke="#a5b4fc" stroke-width="1.2">
+						<path d="M20 20 L20 44 M20 20 L44 20" />
+						<path d="M400 400 L400 376 M400 400 L376 400" />
+					</g>
+				</svg>
+
+				<div class="hero-content">
+					<span class="hero-eyebrow"><span class="dot"></span> Enterprise AI Architecture</span>
+					<h1>Build AI-native systems on a <span class="gradient-text">proven foundation</span></h1>
+					<p>
+						Enterprise patterns, tools, and implementation guides for architecting modern AI solutions —
+						from rapid prototyping to production-grade systems.
+					</p>
+					<div class="cta-buttons">
+						<a href="/patterns/" class="button is-primary">
+							Explore Patterns <Icon name="arrow-right" size={18} />
+						</a>
+						<a href="/guides/" class="button is-secondary">Get Started</a>
+					</div>
+				</div>
+			</section>
+
+			<div class="stats-bar">
+				<div class="stats-grid">
+					{stats.map((stat) => (
+						<div class="stat">
+							<div class="stat-value">{stat.value}</div>
+							<div class="stat-label">{stat.label}</div>
+						</div>
+					))}
+				</div>
+			</div>
+
+			<section class="sections">
+				<div class="section-card">
+					<span class="icon-badge is-patterns"><Icon name="layers" /></span>
+					<h2>Architecture Patterns</h2>
+					<p>
+						Proven patterns for building AI-native systems. Learn about agentic architectures,
+						retrieval-augmented generation, fine-tuning strategies, and more.
+					</p>
+					<a href="/patterns/" class="pill-link">Browse Patterns <Icon name="arrow-right" size={16} /></a>
+				</div>
+
+				<div class="section-card">
+					<span class="icon-badge is-tools"><Icon name="sliders" /></span>
+					<h2>Tools & Technologies</h2>
+					<p>
+						Comprehensive guide to frameworks, vector databases, model providers, and tooling that modern
+						architects need to build efficiently and effectively.
+					</p>
+					<a href="/tools/" class="pill-link">Explore Tools <Icon name="arrow-right" size={16} /></a>
+				</div>
+
+				<div class="section-card">
+					<span class="icon-badge is-guides"><Icon name="compass" /></span>
+					<h2>Implementation Guides</h2>
+					<p>
+						Step-by-step guides for implementing AI architectures. From vibe-coding POCs to integrating
+						with modern AI-DLC frameworks and production systems.
+					</p>
+					<a href="/guides/" class="pill-link">Read Guides <Icon name="arrow-right" size={16} /></a>
+				</div>
+
+				<div class="section-card">
+					<span class="icon-badge is-blog"><Icon name="document" /></span>
+					<h2>Latest Articles</h2>
+					<p>
+						Insights, case studies, and deep dives into emerging patterns and technologies in enterprise
+						AI architecture.
+					</p>
+					<a href="/blog/" class="pill-link">Read Articles <Icon name="arrow-right" size={16} /></a>
+				</div>
+			</section>
+
+			<section class="features">
+				<div class="features-head">
+					<span class="eyebrow">Key Topics</span>
+					<h2>What you'll find in the hub</h2>
+					<p>The recurring themes across every pattern, tool, and guide on this site.</p>
+				</div>
+				<div class="features-grid">
+					<div class="feature">
+						<span class="icon-badge is-patterns"><Icon name="rocket" size={20} /></span>
+						<h3>Rapid Prototyping</h3>
+						<p>Vibe-coding and quick POCs with LLMs, from idea to demo in hours</p>
+					</div>
+					<div class="feature">
+						<span class="icon-badge is-tools"><Icon name="network" size={20} /></span>
+						<h3>Agentic Systems</h3>
+						<p>Build autonomous agents with tool use, reasoning, and planning capabilities</p>
+					</div>
+					<div class="feature">
+						<span class="icon-badge is-guides"><Icon name="search" size={20} /></span>
+						<h3>Retrieval & Knowledge</h3>
+						<p>RAG patterns, vector databases, and knowledge management strategies</p>
+					</div>
+					<div class="feature">
+						<span class="icon-badge is-blog"><Icon name="gauge" size={20} /></span>
+						<h3>Fine-tuning</h3>
+						<p>When and how to fine-tune models for specialized domains and tasks</p>
+					</div>
+					<div class="feature">
+						<span class="icon-badge is-patterns"><Icon name="link" size={20} /></span>
+						<h3>Framework Integration</h3>
+						<p>Integrating with AI-DLC frameworks, MLOps, and existing architectures</p>
+					</div>
+					<div class="feature">
+						<span class="icon-badge is-tools"><Icon name="bar-chart" size={20} /></span>
+						<h3>Cost & Performance</h3>
+						<p>Optimization strategies for model selection, caching, and resource usage</p>
+					</div>
+				</div>
+			</section>
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	@media (prefers-reduced-motion: no-preference) {
+		.pulse-node {
+			animation: pulse 2.6s ease-in-out infinite;
+		}
+		@keyframes pulse {
+			0%, 100% { opacity: 0.55; }
+			50% { opacity: 1; }
+		}
+	}
+</style>

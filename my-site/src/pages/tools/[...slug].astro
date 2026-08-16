@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import ContentPage from '../../layouts/ContentPage.astro';
+
+export async function getStaticPaths() {
+	const tools = await getCollection('tools');
+	return tools.map((tool) => ({
+		params: { slug: tool.id },
+		props: tool,
+	}));
+}
+
+type Props = CollectionEntry<'tools'>;
+
+const tool = Astro.props;
+const { Content } = await render(tool);
+const readingTime = Math.max(1, Math.round((tool.body?.split(/\s+/).length ?? 0) / 200));
+---
+
+<ContentPage
+	title={tool.data.title}
+	description={tool.data.description}
+	pubDate={tool.data.pubDate}
+	updatedDate={tool.data.updatedDate}
+	heroImage={tool.data.heroImage}
+	kind="tools"
+	readingTime={readingTime}
+	backHref="/tools/"
+>
+	<Content />
+</ContentPage>

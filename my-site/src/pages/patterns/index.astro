@@ -1,0 +1,68 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import Icon from '../../components/Icon.astro';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE } from '../../consts';
+
+const patterns = await getCollection('patterns');
+const sortedPatterns = patterns.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Architecture Patterns | ${SITE_TITLE}`} description="Proven patterns for building AI-native systems" />
+	</head>
+	<body>
+		<Header />
+		<main class="listing-main">
+			<div class="page-hero">
+				<span class="icon-badge is-patterns"><Icon name="layers" size={26} /></span>
+				<h1>Architecture Patterns</h1>
+				<p>Proven patterns and approaches for building AI-native systems</p>
+			</div>
+
+			<div class="listing-content">
+				<p class="listing-intro">
+					Learn about foundational patterns that guide enterprise AI architecture. From agentic systems that
+					reason and act, to retrieval-augmented generation for grounding LLMs in knowledge, these patterns
+					solve common architectural challenges.
+				</p>
+
+				{sortedPatterns.length === 0 ? (
+					<p class="empty-state">No patterns published yet. Check back soon!</p>
+				) : (
+					<ul class="card-list">
+						{sortedPatterns.map((pattern) => (
+							<li class="entry-card">
+								<span class="icon-badge is-patterns"><Icon name="layers" size={20} /></span>
+								<div class="entry-card-body">
+									<h3>
+										<a href={`/patterns/${pattern.id}/`}>{pattern.data.title}</a>
+									</h3>
+									<p class="entry-description">{pattern.data.description}</p>
+									{pattern.data.tags && (
+										<div class="tags">
+											{pattern.data.tags.map((tag) => (
+												<span class="tag">{tag}</span>
+											))}
+										</div>
+									)}
+									<div class="meta-row">
+										<span class="meta-item">
+											<Icon name="clock" size={14} />
+											{new Date(pattern.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+										</span>
+									</div>
+								</div>
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>

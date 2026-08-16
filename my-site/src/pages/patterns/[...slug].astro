@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import ContentPage from '../../layouts/ContentPage.astro';
+
+export async function getStaticPaths() {
+	const patterns = await getCollection('patterns');
+	return patterns.map((pattern) => ({
+		params: { slug: pattern.id },
+		props: pattern,
+	}));
+}
+
+type Props = CollectionEntry<'patterns'>;
+
+const pattern = Astro.props;
+const { Content } = await render(pattern);
+const readingTime = Math.max(1, Math.round((pattern.body?.split(/\s+/).length ?? 0) / 200));
+---
+
+<ContentPage
+	title={pattern.data.title}
+	description={pattern.data.description}
+	pubDate={pattern.data.pubDate}
+	updatedDate={pattern.data.updatedDate}
+	heroImage={pattern.data.heroImage}
+	kind="patterns"
+	readingTime={readingTime}
+	backHref="/patterns/"
+>
+	<Content />
+</ContentPage>

@@ -1,12 +1,10 @@
-# Astro Starter Kit: Blog
+# AI Architecture Hub - Enterprise AI Architecture Resources
 
-```sh
-npm create astro@latest -- --template blog
-```
+A comprehensive website for enterprise software architects covering patterns, tools, and best practices for AI-native solutions.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-Features:
+See **[QUICK_START.md](./QUICK_START.md)** to get started!
+See **[SITE_GUIDE.md](./SITE_GUIDE.md)** for complete documentation!
+See **[CONTENT_ROADMAP.md](./CONTENT_ROADMAP.md)** for 50+ content ideas!
 
 - ✅ Minimal styling (make it your own!)
 - ✅ 100/100 Lighthouse performance
