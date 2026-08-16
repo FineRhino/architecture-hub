@@ -1,0 +1,71 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Icon from '../components/Icon.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Search | ${SITE_TITLE}`} description="Search patterns, tools, guides, articles, and resources" />
+		<link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+		<style>
+			main {
+				width: 100%;
+				max-width: 100%;
+				margin: 0;
+				padding: 0;
+				background: var(--surface);
+			}
+			.search-content {
+				max-width: 680px;
+				margin: 0 auto;
+				padding: 3rem 2rem 6rem;
+			}
+			#search {
+				--pagefind-ui-primary: var(--accent);
+				--pagefind-ui-text: var(--text-primary);
+				--pagefind-ui-background: var(--surface);
+				--pagefind-ui-border: var(--border-color);
+				--pagefind-ui-border-width: 1px;
+				--pagefind-ui-border-radius: 10px;
+				--pagefind-ui-font: inherit;
+			}
+			.search-unavailable {
+				display: none;
+				text-align: center;
+				color: var(--text-muted);
+				padding: 2rem;
+				border: 1px dashed var(--border-color);
+				border-radius: var(--radius-md);
+			}
+		</style>
+	</head>
+	<body data-pagefind-ignore>
+		<Header />
+		<main class="listing-main">
+			<div class="page-hero">
+				<span class="icon-badge is-patterns"><Icon name="search" size={26} /></span>
+				<h1>Search</h1>
+				<p>Find patterns, tools, guides, articles, and resources across the hub</p>
+			</div>
+			<div class="search-content">
+				<div id="search"></div>
+				<p class="search-unavailable" id="search-unavailable">
+					Search is only available in the built site (<code>npm run build && npm run preview</code>) — it isn't indexed yet during <code>npm run dev</code>.
+				</p>
+			</div>
+		</main>
+		<Footer />
+		<script is:inline src="/pagefind/pagefind-ui.js"></script>
+		<script is:inline>
+			if (typeof PagefindUI === 'function') {
+				new PagefindUI({ element: '#search', showSubResults: true, showImages: false });
+			} else {
+				document.getElementById('search-unavailable').style.display = 'block';
+			}
+		</script>
+	</body>
+</html>

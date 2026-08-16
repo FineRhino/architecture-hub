@@ -45,6 +45,31 @@ add a new collection, base its `[...slug].astro` on an existing one (e.g.
   it is **not imported in any CSS file**, so it has no effect. Don't assume
   Tailwind utility classes work — all styling here is hand-written CSS.
 
+## Search
+
+`npm run build` runs `astro build && pagefind --site dist`, which indexes
+the built HTML into `dist/pagefind/`. The search page (`src/pages/search.astro`)
+loads `/pagefind/pagefind-ui.js` at runtime, so **search only works after a
+build** (`npm run build && npm run preview`) — it does nothing under
+`npm run dev`, since that index doesn't exist yet. `data-pagefind-ignore` is
+set on `<header>`, `<aside class="sidebar">`, and `<footer>` so repeated nav
+chrome doesn't pollute every result's snippet.
+
+## Astro scoped-style specificity gotcha
+
+Astro compiles scoped `<style>` selectors by appending a `data-astro-cid-*`
+attribute to every element in the selector, not just the last one — so
+`nav a { ... }` becomes `nav[data-astro-cid-x] a[data-astro-cid-x]`. That
+selector's specificity is (0, 2, 2) (two attributes, two elements). A later
+rule like `.my-link { ... }` compiles to `.my-link[data-astro-cid-x]`, which
+is only (0, 2, 0) — **fewer elements, so it loses**, even though it looks
+more specific by ordinary CSS instincts and comes later in the file. This
+silently broke a header icon button's padding override for a while. If a
+style override on an element nested inside a broader selector (e.g. an `<a>`
+inside `<nav>`) doesn't seem to apply, check compiled specificity in
+`dist/_astro/*.css` rather than assuming source order will win — match or
+exceed the original selector's element count (e.g. `nav a.my-link { ... }`).
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

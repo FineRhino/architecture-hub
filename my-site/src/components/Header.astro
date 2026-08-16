@@ -4,7 +4,7 @@ import HeaderLink from './HeaderLink.astro';
 import Icon from './Icon.astro';
 ---
 
-<header>
+<header data-pagefind-ignore>
 	<nav>
 		<a href="/" class="brand">
 			<span class="brand-mark">
@@ -12,12 +12,17 @@ import Icon from './Icon.astro';
 			</span>
 			{SITE_TITLE}
 		</a>
-		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/patterns">Patterns</HeaderLink>
-			<HeaderLink href="/tools">Tools</HeaderLink>
-			<HeaderLink href="/guides">Guides</HeaderLink>
-			<HeaderLink href="/blog">Articles</HeaderLink>
+		<div class="nav-right">
+			<div class="internal-links">
+				<HeaderLink href="/">Home</HeaderLink>
+				<HeaderLink href="/patterns">Patterns</HeaderLink>
+				<HeaderLink href="/tools">Tools</HeaderLink>
+				<HeaderLink href="/guides">Guides</HeaderLink>
+				<HeaderLink href="/blog">Articles</HeaderLink>
+			</div>
+			<a href="/search" class="search-link" aria-label="Search the site">
+				<Icon name="search" size={18} />
+			</a>
 		</div>
 	</nav>
 </header>
@@ -79,9 +84,34 @@ import Icon from './Icon.astro';
 		border-bottom-color: var(--accent);
 		color: var(--text-primary);
 	}
+	.nav-right {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
 	.internal-links {
 		display: flex;
 		gap: 0;
+	}
+	nav a.search-link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		padding: 0;
+		border-bottom: none;
+		border-radius: var(--radius-sm);
+		color: var(--text-secondary);
+		transition: all 0.2s ease;
+		flex-shrink: 0;
+	}
+	nav a.search-link svg {
+		flex-shrink: 0;
+	}
+	nav a.search-link:hover {
+		background: var(--surface-subtle);
+		color: var(--accent);
 	}
 	@media (max-width: 720px) {
 		nav a {

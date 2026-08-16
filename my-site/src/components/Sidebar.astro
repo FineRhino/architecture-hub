@@ -14,7 +14,7 @@ const pathname = Astro.url.pathname;
 const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<aside class="sidebar" aria-label="Explore">
+<aside class="sidebar" aria-label="Explore" data-pagefind-ignore>
 	<nav>
 		<span class="sidebar-heading">Explore</span>
 		<ul>
