@@ -11,10 +11,9 @@ export const GA_MEASUREMENT_ID = 'G-RCZGRH3JLC';
 
 export const NAVIGATION = [
   { href: '/', label: 'Home' },
-  { href: '/patterns/', label: 'Patterns' },
+  { href: '/patterns/', label: 'Articles' },
   { href: '/tools/', label: 'Tools & Tech' },
   { href: '/guides/', label: 'Guides' },
-  { href: '/blog/', label: 'Articles' },
   { href: '/resources/', label: 'Resources' },
   { href: '/podcasts/', label: 'Podcasts' },
 ];

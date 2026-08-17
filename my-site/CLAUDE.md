@@ -6,6 +6,20 @@ Each non-blog collection has an `index.astro` listing page and a
 `[...slug].astro` detail page under `src/pages/<collection>/`, both built on
 `src/layouts/ContentPage.astro`.
 
+**Naming note:** the `patterns` collection is displayed everywhere in the UI
+as "Articles" (nav, sidebar, footer, page headings, the `Article` eyebrow
+label in `ContentPage.astro`'s `kindMeta`) — but its internal collection
+name, file paths (`src/content/patterns/`, `src/pages/patterns/`), and URL
+(`/patterns/`) were deliberately left unchanged. Don't be surprised that
+"Articles" in the nav links to `/patterns/`.
+
+The `blog` collection is currently empty (its starter-template placeholder
+posts were deleted) but the collection definition, `src/pages/blog/`
+routes, and `rss.xml.js` were intentionally left in place rather than
+removed, so `/blog/` renders an empty state instead of 404ing and the RSS
+feed still builds (with zero items). Nothing links to `/blog/` in the nav
+anymore.
+
 ## Development
 
 When starting the dev server, use background mode:
@@ -44,6 +58,18 @@ add a new collection, base its `[...slug].astro` on an existing one (e.g.
 - `@tailwindcss/vite` is installed and wired into `astro.config.mjs`, but
   it is **not imported in any CSS file**, so it has no effect. Don't assume
   Tailwind utility classes work — all styling here is hand-written CSS.
+
+## Content deletion cache gotcha
+
+Astro caches parsed content-collection data in `node_modules/.astro/data-store.json`
+(separate from the project-root `.astro/` directory). If you delete files
+from `src/content/<collection>/`, a stale build can keep trying to render
+routes for content that no longer exists on disk, failing with confusing
+errors (`UnknownContentCollectionError`, or unrelated-looking image/asset
+errors) rather than just dropping the removed pages. Clearing the
+project-root `.astro/` and `dist/` is **not enough** — also remove
+`node_modules/.astro` (and `node_modules/.vite` for good measure) before
+rebuilding after deleting content files.
 
 ## Search
 

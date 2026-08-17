@@ -5,19 +5,19 @@ import Header from '../components/Header.astro';
 import Icon from '../components/Icon.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getCollection } from 'astro:content';
+import { episodes } from '../data/podcasts';
 
-const [patterns, tools, guides, posts] = await Promise.all([
+const [patterns, tools, guides] = await Promise.all([
 	getCollection('patterns'),
 	getCollection('tools'),
 	getCollection('guides'),
-	getCollection('blog'),
 ]);
 
 const stats = [
-	{ label: 'Architecture patterns', value: patterns.length, href: '/patterns/' },
+	{ label: 'Articles', value: patterns.length, href: '/patterns/' },
 	{ label: 'Tools reviewed', value: tools.length, href: '/tools/' },
 	{ label: 'Implementation guides', value: guides.length, href: '/guides/' },
-	{ label: 'Articles published', value: posts.length, href: '/blog/' },
+	{ label: 'Podcasts', value: episodes.length, href: '/podcasts/' },
 ];
 ---
 
@@ -343,7 +343,7 @@ const stats = [
 					</p>
 					<div class="cta-buttons">
 						<a href="/patterns/" class="button is-primary">
-							Explore Patterns <Icon name="arrow-right" size={18} />
+							Explore Articles <Icon name="arrow-right" size={18} />
 						</a>
 						<a href="/guides/" class="button is-secondary">Get Started</a>
 					</div>
@@ -364,12 +364,12 @@ const stats = [
 			<section class="sections">
 				<div class="section-card">
 					<span class="icon-badge is-patterns"><Icon name="layers" /></span>
-					<h2>Architecture Patterns</h2>
+					<h2>Articles</h2>
 					<p>
-						Proven patterns for building AI-native systems. Learn about agentic architectures,
+						In-depth articles on building AI-native systems. Learn about agentic architectures,
 						retrieval-augmented generation, fine-tuning strategies, and more.
 					</p>
-					<a href="/patterns/" class="pill-link">Browse Patterns <Icon name="arrow-right" size={16} /></a>
+					<a href="/patterns/" class="pill-link">Browse Articles <Icon name="arrow-right" size={16} /></a>
 				</div>
 
 				<div class="section-card">
@@ -390,16 +390,6 @@ const stats = [
 						with modern AI-DLC frameworks and production systems.
 					</p>
 					<a href="/guides/" class="pill-link">Read Guides <Icon name="arrow-right" size={16} /></a>
-				</div>
-
-				<div class="section-card">
-					<span class="icon-badge is-blog"><Icon name="document" /></span>
-					<h2>Latest Articles</h2>
-					<p>
-						Insights, case studies, and deep dives into emerging patterns and technologies in enterprise
-						AI architecture.
-					</p>
-					<a href="/blog/" class="pill-link">Read Articles <Icon name="arrow-right" size={16} /></a>
 				</div>
 			</section>
 

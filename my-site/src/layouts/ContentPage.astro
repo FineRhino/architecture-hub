@@ -18,7 +18,7 @@ type Props = CollectionEntry<'patterns' | 'tools' | 'guides'>['data'] & {
 const { title, description, pubDate, updatedDate, heroImage, kind, readingTime, backHref } = Astro.props;
 
 const kindMeta: Record<Props['kind'], { label: string; icon: IconName; accentClass: string }> = {
-	patterns: { label: 'Pattern', icon: 'layers', accentClass: 'is-patterns' },
+	patterns: { label: 'Article', icon: 'layers', accentClass: 'is-patterns' },
 	tools: { label: 'Tool', icon: 'sliders', accentClass: 'is-tools' },
 	guides: { label: 'Guide', icon: 'compass', accentClass: 'is-guides' },
 };

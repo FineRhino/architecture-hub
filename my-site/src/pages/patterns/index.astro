@@ -14,15 +14,15 @@ const sortedPatterns = patterns.sort((a, b) => new Date(b.data.pubDate).getTime(
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={`Architecture Patterns | ${SITE_TITLE}`} description="Proven patterns for building AI-native systems" />
+		<BaseHead title={`Articles | ${SITE_TITLE}`} description="In-depth articles on architecture patterns for building AI-native systems" />
 	</head>
 	<body>
 		<Header />
 		<main class="listing-main">
 			<div class="page-hero">
 				<span class="icon-badge is-patterns"><Icon name="layers" size={26} /></span>
-				<h1>Architecture Patterns</h1>
-				<p>Proven patterns and approaches for building AI-native systems</p>
+				<h1>Articles</h1>
+				<p>In-depth articles on architecture patterns for building AI-native systems</p>
 			</div>
 
 			<div class="site-shell">
@@ -31,12 +31,12 @@ const sortedPatterns = patterns.sort((a, b) => new Date(b.data.pubDate).getTime(
 					<div class="listing-content">
 						<p class="listing-intro">
 							Learn about foundational patterns that guide enterprise AI architecture. From agentic systems that
-							reason and act, to retrieval-augmented generation for grounding LLMs in knowledge, these patterns
+							reason and act, to retrieval-augmented generation for grounding LLMs in knowledge, these articles
 							solve common architectural challenges.
 						</p>
 
 						{sortedPatterns.length === 0 ? (
-							<p class="empty-state">No patterns published yet. Check back soon!</p>
+							<p class="empty-state">No articles published yet. Check back soon!</p>
 						) : (
 							<ul class="card-list">
 								{sortedPatterns.map((pattern) => (
