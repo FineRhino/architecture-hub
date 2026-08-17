@@ -5,6 +5,8 @@ pubDate: 2026-08-16
 tags: ["patterns", "explainability", "trust", "governance", "responsible-ai"]
 ---
 
+*Part 1 of 2 — for the specific failure mode that shows up once "the model" becomes "a multi-step agent run," see [Designing for Explainability in Agentic Workflows](/patterns/designing-for-explainability-agentic-workflows/).*
+
 ## Why Explainability Is an Architecture Problem
 
 Explainability is often treated as a data-science concern — pick a technique, generate a chart, ship it. In practice it's an architectural one. Whether a system *can* explain a decision depends on choices made long before any explanation is requested: what gets logged, whether the model is interpretable by design, whether there's a component whose job is specifically to produce explanations, and whether a human has anywhere to intervene when an explanation raises a concern.
