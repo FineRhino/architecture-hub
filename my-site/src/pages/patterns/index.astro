@@ -9,6 +9,14 @@ import { SITE_TITLE } from '../../consts';
 
 const patterns = await getCollection('patterns');
 const sortedPatterns = patterns.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+const tagCounts = new Map<string, number>();
+for (const pattern of sortedPatterns) {
+	for (const tag of pattern.data.tags ?? []) {
+		tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+	}
+}
+const allTags = [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
 ---
 
 <!doctype html>
@@ -38,32 +46,46 @@ const sortedPatterns = patterns.sort((a, b) => new Date(b.data.pubDate).getTime(
 						{sortedPatterns.length === 0 ? (
 							<p class="empty-state">No articles published yet. Check back soon!</p>
 						) : (
-							<ul class="card-list">
-								{sortedPatterns.map((pattern) => (
-									<li class="entry-card">
-										<span class="icon-badge is-patterns"><Icon name="layers" size={20} /></span>
-										<div class="entry-card-body">
-											<h3>
-												<a href={`/patterns/${pattern.id}/`}>{pattern.data.title}</a>
-											</h3>
-											<p class="entry-description">{pattern.data.description}</p>
-											{pattern.data.tags && (
-												<div class="tags">
-													{pattern.data.tags.map((tag) => (
-														<span class="tag">{tag}</span>
-													))}
+							<>
+								<div class="tag-filter" data-tag-filter role="group" aria-label="Filter articles by tag">
+									<button type="button" class="tag-filter-btn is-all active" data-tag-filter-btn data-tag="__all__">
+										All <span class="tag-filter-count">{sortedPatterns.length}</span>
+									</button>
+									{allTags.map(([tag, count]) => (
+										<button type="button" class="tag-filter-btn" data-tag-filter-btn data-tag={tag}>
+											{tag} <span class="tag-filter-count">{count}</span>
+										</button>
+									))}
+								</div>
+
+								<ul class="card-list" data-filterable-list>
+									{sortedPatterns.map((pattern) => (
+										<li class="entry-card" data-tags={(pattern.data.tags ?? []).join('|')}>
+											<span class="icon-badge is-patterns"><Icon name="layers" size={20} /></span>
+											<div class="entry-card-body">
+												<h3>
+													<a href={`/patterns/${pattern.id}/`}>{pattern.data.title}</a>
+												</h3>
+												<p class="entry-description">{pattern.data.description}</p>
+												{pattern.data.tags && (
+													<div class="tags">
+														{pattern.data.tags.map((tag) => (
+															<span class="tag">{tag}</span>
+														))}
+													</div>
+												)}
+												<div class="meta-row">
+													<span class="meta-item">
+														<Icon name="clock" size={14} />
+														{new Date(pattern.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+													</span>
 												</div>
-											)}
-											<div class="meta-row">
-												<span class="meta-item">
-													<Icon name="clock" size={14} />
-													{new Date(pattern.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
-												</span>
 											</div>
-										</div>
-									</li>
-								))}
-							</ul>
+										</li>
+									))}
+								</ul>
+								<p class="empty-state" data-filter-empty hidden>No articles match the selected tags.</p>
+							</>
 						)}
 					</div>
 				</div>
@@ -72,3 +94,46 @@ const sortedPatterns = patterns.sort((a, b) => new Date(b.data.pubDate).getTime(
 		<Footer />
 	</body>
 </html>
+
+<script>
+	const filterBar = document.querySelector<HTMLElement>('[data-tag-filter]');
+	const list = document.querySelector<HTMLElement>('[data-filterable-list]');
+	const emptyState = document.querySelector<HTMLElement>('[data-filter-empty]');
+
+	if (filterBar && list) {
+		const buttons = filterBar.querySelectorAll<HTMLButtonElement>('[data-tag-filter-btn]');
+		const cards = list.querySelectorAll<HTMLElement>('[data-tags]');
+		const active = new Set<string>();
+
+		const apply = () => {
+			let visibleCount = 0;
+			cards.forEach((card) => {
+				const cardTags = (card.dataset.tags ?? '').split('|').filter(Boolean);
+				const matches = active.size === 0 || cardTags.some((tag) => active.has(tag));
+				card.hidden = !matches;
+				if (matches) visibleCount += 1;
+			});
+			if (emptyState) emptyState.hidden = visibleCount > 0;
+
+			buttons.forEach((btn) => {
+				const tag = btn.dataset.tag ?? '';
+				const isAll = tag === '__all__';
+				btn.classList.toggle('active', isAll ? active.size === 0 : active.has(tag));
+			});
+		};
+
+		buttons.forEach((btn) => {
+			btn.addEventListener('click', () => {
+				const tag = btn.dataset.tag ?? '';
+				if (tag === '__all__') {
+					active.clear();
+				} else if (active.has(tag)) {
+					active.delete(tag);
+				} else {
+					active.add(tag);
+				}
+				apply();
+			});
+		});
+	}
+</script>

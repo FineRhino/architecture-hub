@@ -443,6 +443,49 @@ hr {
 	font-size: 1rem;
 }
 
+.tag-filter {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+	margin-bottom: 2rem;
+}
+
+.tag-filter-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	background: var(--surface);
+	border: 1px solid var(--border-color);
+	color: var(--text-secondary);
+	padding: 0.4rem 0.85rem;
+	border-radius: 999px;
+	font-size: 0.85rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	font-family: inherit;
+}
+
+.tag-filter-btn:hover {
+	border-color: var(--border-strong);
+	color: var(--text-primary);
+}
+
+.tag-filter-btn.active {
+	background: var(--gradient-brand);
+	border-color: transparent;
+	color: #fff;
+}
+
+.tag-filter-btn .tag-filter-count {
+	font-size: 0.75rem;
+	opacity: 0.75;
+}
+
+.entry-card[hidden] {
+	display: none;
+}
+
 .card-list {
 	list-style: none;
 	padding: 0;
