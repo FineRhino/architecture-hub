@@ -1,43 +1,42 @@
 ---
 title: "LangChain: Orchestrating AI Applications"
-description: "Build production AI apps with LangChain's modular framework"
+description: "Build production AI apps with LangChain, LCEL, and LangGraph"
 pubDate: 2024-08-15
+updatedDate: 2026-08-16
 category: "Frameworks"
 url: "https://www.langchain.com"
-tags: ["frameworks", "orchestration", "python", "javascript"]
+tags: ["frameworks", "orchestration", "python", "javascript", "langgraph"]
 ---
 
 ## What is LangChain?
 
-LangChain is a framework for developing applications powered by language models. It enables you to:
+LangChain is a framework for developing applications powered by language models. Since this article was first published, the ecosystem has split into two complementary layers, and it's important to know which one you actually need:
 
-- Chain multiple LLM calls and tools together
-- Maintain conversation memory
-- Integrate with external APIs and databases
-- Build RAG systems easily
-- Deploy production applications
+- **LangChain** (with LCEL) — composable chains, RAG pipelines, and rapid prototyping
+- **LangGraph** — the recommended orchestration layer for production-grade, stateful agents
+
+Both reached **v1.0 in October 2025**, marking the framework's first stable major release after several years of rapid, breaking-change iteration.
 
 ## Core Concepts
 
-### Chains
-Connect multiple operations in sequence:
-- LLM chains
-- Sequential chains
-- Conditional chains
-- Custom chains
+### Chains and LCEL
+LangChain Expression Language (LCEL) is the modern, standard way to compose chains — connecting prompts, models, and parsers with a pipe operator:
 
-### Agents
-Autonomous systems that:
-- Decide which tools to use
-- Iterate until goal is reached
-- Maintain state and memory
+```python
+chain = prompt | model | output_parser
+```
+
+LCEL supports streaming and parallel execution out of the box. The older `LLMChain` class it replaced is deprecated — if you see it in a tutorial, treat that tutorial as outdated.
+
+### Agents vs. Graphs
+Simple, linear agent behavior can still be expressed directly in LangChain. But once an agent needs persistent memory across sessions, conditional branching, multi-agent coordination, or human-in-the-loop approval steps, that's **LangGraph's** job, not LangChain's. LangGraph models the agent as an explicit graph of nodes and edges, which is what makes things like audit trails and rollback points tractable in production — the same reason it's become the default choice at companies like Uber, LinkedIn, Klarna, and Elastic.
 
 ### Memory
 Persist and retrieve conversation history:
 - Conversation buffer
 - Summary memory
 - Entity memory
-- Custom memory implementations
+- LangGraph's persistent checkpointing (for anything beyond a single session)
 
 ### Tools
 Integrate external capabilities:
@@ -48,40 +47,43 @@ Integrate external capabilities:
 
 ## LangChain vs Alternatives
 
-| Feature | LangChain | LlamaIndex | Semantic Kernel |
-|---------|-----------|-----------|-----------------|
-| **Language Support** | Python, JS | Python, JS | C#, Python (beta) |
-| **Focus** | General orchestration | Indexing & retrieval | Microsoft ecosystem |
-| **Learning Curve** | Moderate | Moderate | Higher (more features) |
-| **Community** | Large & active | Growing | Enterprise-focused |
-| **Best For** | Agents, chains, apps | RAG systems | .NET/Azure integration |
+| Feature | LangChain + LangGraph | CrewAI | Microsoft Agent Framework | LlamaIndex |
+|---------|------------------------|--------|-----------------------------|-----------|
+| **Language Support** | Python, JS | Python | Python, .NET | Python, JS |
+| **Focus** | General orchestration + stateful agents | Role-based multi-agent prototyping | Unified enterprise agent platform | Indexing & retrieval |
+| **Learning Curve** | Moderate–higher (two-layer model) | Low | Moderate | Moderate |
+| **Production maturity** | High (v1.0, widest enterprise adoption) | Growing, lighter production controls | High (Azure-native governance) | Growing |
+| **Best For** | Complex, stateful production agents | Fast multi-agent prototypes | Microsoft/Azure-standardized shops | RAG-heavy systems |
+
+A note on that "Microsoft Agent Framework" column: as of October 2025, Microsoft merged **AutoGen** and **Semantic Kernel** into a single unified framework, with general availability targeted for early 2026. AutoGen as a standalone project is now in maintenance mode (security patches only) — if you're evaluating it today, evaluate Microsoft Agent Framework instead.
 
 ## Key Features
 
 ### 1. Multiple Model Support
-- OpenAI, Anthropic, Local models
-- Easy model swapping
-- Fallback handling
+LangChain's unified model interface lets you swap providers (OpenAI, Anthropic, Google, open-weight models via Ollama and others) with minimal code changes, and configure fallback chains across them. Avoid hardcoding specific model version strings in your architecture docs — that's the part of this ecosystem that changes fastest; pin versions in config, not in prose.
 
 ### 2. Built-in Components
 - Chat memory management
-- Output parsing
+- Output parsing (including structured/JSON-schema output)
 - Prompt templates
 - Document loaders
 
 ### 3. Integration Ecosystem
-- 100+ integrations
-- LangSmith for debugging/monitoring
-- LangServe for deployment
+- Hundreds of third-party integrations
+- **LangSmith** for tracing, evaluation, and deployment (see below)
 
-## When to Use LangChain
+## When to Use LangChain (and When You Need LangGraph Too)
 
-✅ **Great for:**
-- Complex multi-step AI workflows
-- Agent applications
-- RAG systems
+✅ **LangChain alone is enough for:**
+- RAG pipelines and retrieval-heavy applications
 - Rapid prototyping
-- Teams building production apps
+- Simple, linear multi-step chains
+
+✅ **Add LangGraph when you need:**
+- Stateful, long-running agents
+- Multi-agent coordination
+- Human-in-the-loop approval steps
+- Production requirements around auditability and recovery
 
 ❌ **Overkill for:**
 - Simple single LLM calls
@@ -91,42 +93,42 @@ Integrate external capabilities:
 ## Getting Started
 
 ```python
-from langchain.llms import OpenAI
-from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 
-# Create a simple chain
-template = "What is a good company name for {company}?"
-prompt = PromptTemplate(template=template, input_variables=["company"])
-llm = OpenAI(temperature=0.9)
-chain = LLMChain(prompt=prompt, llm=llm)
+# LCEL: compose a chain with the pipe operator
+prompt = ChatPromptTemplate.from_template(
+    "What is a good company name for {company}?"
+)
+model = ChatOpenAI(model="gpt-4o", temperature=0.9)
+chain = prompt | model | StrOutputParser()
 
-# Run the chain
-result = chain.run("AI consulting")
+result = chain.invoke({"company": "AI consulting"})
 ```
 
-## LangSmith: Production Monitoring
+## LangSmith: Observability, Evaluation, and Deployment
 
-Monitor, debug, and evaluate your LangChain applications:
-- Real-time tracing
-- Performance analytics
-- A/B testing
-- Cost tracking
+LangSmith has grown well beyond a tracing tool into a full agent operations platform:
 
-## Deployment with LangServe
+- **Tracing** — step-by-step visibility into every chain and agent run
+- **Evaluation** — offline datasets plus online, multi-turn, LLM-as-judge evaluators
+- **LangSmith Fleet** — agent identity, sharing, and permissions for managing agents across a company (formerly "Agent Builder")
+- **Unified cost view** across an entire agent workflow, not just individual LLM calls
+- **OpenTelemetry support** — any OTel-compatible app can export traces to LangSmith
+- **Deployment** — what used to be a separate product called LangGraph Platform is now part of LangSmith, branded as **LangSmith Deployment**
 
-Deploy LangChain applications as:
-- REST APIs
-- FastAPI endpoints
-- Managed services
+## Deployment: LangServe Is Deprecated
+
+If you've seen older guides recommend **LangServe** for exposing chains as REST APIs — that project was archived in May 2026 and is no longer accepting feature development. For new projects, deploy through **LangSmith Deployment** (formerly LangGraph Platform) instead, which adds persistence, human-in-the-loop workflows, cron scheduling, webhooks, and streaming support out of the box.
 
 ## Best Practices
 
-1. **Use agents judiciously** - They're powerful but costly
-2. **Cache when possible** - Reduce API calls
-3. **Implement feedback loops** - Monitor quality
-4. **Version your prompts** - Track changes
-5. **Test extensively** - Complex chains need validation
+1. **Default to LCEL, not the old chain classes** — anything still using `LLMChain` should be migrated.
+2. **Reach for LangGraph deliberately, not by default** — it solves real problems (state, coordination, auditability) but adds real complexity. Don't add it to a simple RAG pipeline that doesn't need it.
+3. **Cache when possible** — reduce API calls.
+4. **Version your prompts** — track changes over time.
+5. **Use LangSmith's evaluation tooling before shipping changes** — regressions in agent behavior are easy to miss without a dataset-backed eval step.
 
 ## Integration Examples
 
@@ -137,27 +139,21 @@ Deploy LangChain applications as:
 
 ## Production Considerations
 
-- **Cost monitoring** - Track LLM usage
-- **Latency** - Cache and optimize chains
-- **Error handling** - Graceful degradation
-- **Fallbacks** - Model and service redundancy
-- **Observability** - Use LangSmith or alternatives
-
-## Ecosystem
-
-- **LangChain Community Hub** - Shared components
-- **LangFlow** - UI for building chains
-- **LangChain CLI** - Command-line tools
+- **Cost monitoring** — LangSmith's unified cost view covers full workflows, not just individual calls
+- **Latency** — cache and optimize chains
+- **Error handling and fallbacks** — model and service redundancy
+- **Observability** — LangSmith tracing, or OpenTelemetry export to your existing stack
+- **State and recovery** — for anything long-running, this is a LangGraph concern, not something to bolt onto plain LangChain
 
 ## Resources
 
 - [Official Documentation](https://python.langchain.com/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [LangSmith Docs](https://docs.smith.langchain.com/)
 - [GitHub Repository](https://github.com/langchain-ai/langchain)
-- [Discord Community](https://discord.gg/6adMQxSpJS)
 
 ## Conclusion
 
-LangChain is essential for teams building production AI applications. Its abstraction layer over multiple LLM providers, combined with agentic capabilities and strong community support, makes it a top choice for enterprise AI development.
+LangChain remains a strong default for teams building production AI applications, but the honest 2026 picture is a two-layer one: LangChain plus LCEL for composition and RAG, LangGraph for anything stateful or multi-agent, and LangSmith across both for observability, evaluation, and deployment. Treat any guide (including older versions of this one) that only talks about LangChain in isolation as incomplete.
 
-**Best suited for:** Teams building complex AI systems with budget for learning curve
+**Best suited for:** Teams building complex, stateful AI systems who are willing to learn the LangChain/LangGraph split rather than treating LangChain as a single monolithic framework.
