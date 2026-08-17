@@ -14,10 +14,10 @@ const [patterns, tools, guides, posts] = await Promise.all([
 ]);
 
 const stats = [
-	{ label: 'Architecture patterns', value: patterns.length },
-	{ label: 'Tools reviewed', value: tools.length },
-	{ label: 'Implementation guides', value: guides.length },
-	{ label: 'Articles published', value: posts.length },
+	{ label: 'Architecture patterns', value: patterns.length, href: '/patterns/' },
+	{ label: 'Tools reviewed', value: tools.length, href: '/tools/' },
+	{ label: 'Implementation guides', value: guides.length, href: '/guides/' },
+	{ label: 'Articles published', value: posts.length, href: '/blog/' },
 ];
 ---
 
@@ -140,12 +140,21 @@ const stats = [
 				overflow: hidden;
 			}
 			.stat {
+				display: block;
 				padding: 1.75rem 1rem;
 				text-align: center;
 				border-right: 1px solid var(--border-color);
+				text-decoration: none;
+				transition: background 0.2s ease;
 			}
 			.stat:last-child {
 				border-right: none;
+			}
+			.stat:hover {
+				background: var(--surface-subtle);
+			}
+			.stat:hover .stat-label {
+				color: var(--accent);
 			}
 			.stat-value {
 				font-size: 2rem;
@@ -344,10 +353,10 @@ const stats = [
 			<div class="stats-bar">
 				<div class="stats-grid">
 					{stats.map((stat) => (
-						<div class="stat">
+						<a href={stat.href} class="stat">
 							<div class="stat-value">{stat.value}</div>
 							<div class="stat-label">{stat.label}</div>
-						</div>
+						</a>
 					))}
 				</div>
 			</div>
