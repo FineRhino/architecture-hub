@@ -315,6 +315,51 @@ const readingOrder = [
 	{ label: 'The Ferrari in the Jungle — Thoughtworks', note: 'connect agentic engineering back to the realities of a large enterprise.', href: sections[2].articles[2].url },
 ];
 
+const eaResources = [
+	{
+		name: 'TOGAF',
+		org: 'The Open Group',
+		url: 'https://www.opengroup.org/togaf',
+		why: 'The most widely adopted enterprise architecture framework and certification.',
+	},
+	{
+		name: 'Zachman Framework',
+		org: 'Zachman International',
+		url: 'https://www.zachman.com/about-the-zachman-framework',
+		why: 'The original EA taxonomy — classifies architecture artifacts by perspective and abstraction.',
+	},
+	{
+		name: 'Gartner',
+		org: 'Research & Advisory',
+		url: 'https://www.gartner.com/en/enterprise-architecture',
+		why: 'Independent research and advisory on EA strategy, operating models, and trends.',
+	},
+	{
+		name: 'Forrester',
+		org: 'Research & Advisory',
+		url: 'https://www.forrester.com/blogs/category/enterprise-architecture/',
+		why: 'Research on EA practice, tooling, and business alignment.',
+	},
+	{
+		name: 'ArchiMate',
+		org: 'The Open Group',
+		url: 'https://www.opengroup.org/archimate-forum/archimate-overview',
+		why: 'Open modeling language for describing and visualizing enterprise architecture.',
+	},
+	{
+		name: 'IASA Global',
+		org: 'Professional Association',
+		url: 'https://www.iasaglobal.org/',
+		why: 'Professional association and certification body for IT and software architects.',
+	},
+	{
+		name: 'ISO/IEC/IEEE 42010',
+		org: 'International Standard',
+		url: 'https://www.iso.org/standard/74393.html',
+		why: 'The international standard defining what an architecture description actually is.',
+	},
+];
+
 const layers = [
 	'Experience / Interaction Layer',
 	'Agent & Reasoning Layer',
@@ -334,6 +379,101 @@ const newFlow = ['Business intent', 'Specification', 'Architecture constraints',
 <html lang="en">
 	<head>
 		<BaseHead title={`Resources | ${SITE_TITLE}`} description="Curated external reading on enterprise architecture in the age of AI and agents" />
+		<style>
+			.site-shell {
+				max-width: 1440px;
+			}
+			.resources-layout {
+				display: flex;
+				gap: 3rem;
+				align-items: flex-start;
+				width: 100%;
+			}
+			.resources-layout .listing-content {
+				flex: 1;
+				min-width: 0;
+			}
+			.ea-resources-rail {
+				width: 280px;
+				flex-shrink: 0;
+				position: sticky;
+				top: calc(56px + 2rem);
+			}
+			.ea-resources-rail h2 {
+				font-size: 1.05rem;
+				margin-bottom: 0.4rem;
+			}
+			.ea-resources-rail > p {
+				color: var(--text-secondary);
+				font-size: 0.85rem;
+				line-height: 1.5;
+				margin-bottom: 1.25rem;
+			}
+			.ea-resources-rail ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 1.1rem;
+			}
+			.ea-resources-rail li {
+				padding-bottom: 1.1rem;
+				border-bottom: 1px solid var(--border-color);
+			}
+			.ea-resources-rail li:last-child {
+				border-bottom: none;
+				padding-bottom: 0;
+			}
+			.ea-resources-rail a {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.3rem;
+				color: var(--text-primary);
+				font-weight: 700;
+				font-size: 0.92rem;
+				text-decoration: none;
+			}
+			.ea-resources-rail a:hover {
+				color: var(--accent);
+			}
+			.ea-resources-rail .ea-org {
+				display: block;
+				color: var(--color-blog);
+				font-weight: 600;
+				font-size: 0.78rem;
+				margin-top: 0.15rem;
+			}
+			.ea-resources-rail li p {
+				color: var(--text-secondary);
+				font-size: 0.85rem;
+				line-height: 1.5;
+				margin: 0.4rem 0 0;
+			}
+			@media (max-width: 1200px) {
+				.resources-layout {
+					flex-direction: column;
+				}
+				.ea-resources-rail {
+					width: 100%;
+					position: static;
+				}
+				.ea-resources-rail ul {
+					flex-direction: row;
+					flex-wrap: wrap;
+				}
+				.ea-resources-rail li {
+					width: calc(50% - 0.55rem);
+					border-bottom: none;
+					padding-bottom: 0;
+				}
+			}
+			@media (max-width: 640px) {
+				.ea-resources-rail li {
+					width: 100%;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
@@ -347,6 +487,7 @@ const newFlow = ['Business intent', 'Specification', 'Architecture constraints',
 			<div class="site-shell">
 				<Sidebar />
 				<div class="site-content">
+					<div class="resources-layout">
 					<div class="listing-content">
 						<p class="listing-intro">
 							A curated reading list on how enterprise architecture is changing as AI and agents become
@@ -479,6 +620,24 @@ const newFlow = ['Business intent', 'Specification', 'Architecture constraints',
 								as putting AI capabilities into the systems themselves.
 							</p>
 						</div>
+					</div>
+
+					<aside class="ea-resources-rail">
+						<h2>Foundational EA Resources</h2>
+						<p>The frameworks, standards, and analyst firms behind the discipline itself.</p>
+						<ul>
+							{eaResources.map((item) => (
+								<li>
+									<a href={item.url} target="_blank" rel="noopener noreferrer">
+										{item.name}
+										<Icon name="external-link" size={12} />
+									</a>
+									<span class="ea-org">{item.org}</span>
+									<p>{item.why}</p>
+								</li>
+							))}
+						</ul>
+					</aside>
 					</div>
 				</div>
 			</div>
